@@ -112,10 +112,31 @@ bool BootUp::IsTransition()
 void* BootUp::ThreadedLoad( ALLEGRO_THREAD*, void* )
 {
 	// Load all resources for caching
-	// ALLEGRO_BITMAP* bkg = BitmapCache::LoadBitmap("resources/ui_background.png");
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/grass.png") );
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/sand.png") );
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/dirt.png") );
+
+	BitmapCache::LoadBitmap("resources/tankBlue.png");
+	BitmapCache::LoadBitmap("resources/tankGreen.png");
+	BitmapCache::LoadBitmap("resources/tankRed.png");
+	BitmapCache::LoadBitmap("resources/barrelBlue.png");
+	BitmapCache::LoadBitmap("resources/barrelGreen.png");
+	BitmapCache::LoadBitmap("resources/barrelRed.png");
+	BitmapCache::LoadBitmap("resources/bulletYellowSilver.png");
+
+	BitmapCache::LoadBitmap("resources/smokeGrey0.png");
+	BitmapCache::LoadBitmap("resources/smokeGrey4.png");
+	BitmapCache::LoadBitmap("resources/smokeGrey5.png");
+
+	BitmapCache::LoadBitmap("resources/singleplayer.png");
+	BitmapCache::LoadBitmap("resources/multiplayer.png");
+	BitmapCache::LoadBitmap("resources/massiveMultiplayer.png");
+
+	BitmapCache::LoadBitmap("resources/gamepad1.png");
+	BitmapCache::LoadBitmap("resources/gamepad2.png");
+	BitmapCache::LoadBitmap("resources/gamepad3.png");
+	BitmapCache::LoadBitmap("resources/gamepad4.png");
+
 
 	loadingComplete = true;
 	return nullptr;

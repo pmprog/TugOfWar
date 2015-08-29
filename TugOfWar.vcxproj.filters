@@ -150,7 +150,13 @@
     <ClCompile Include="Game\recordbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\helpstage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Game\resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\localsetupstage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -311,7 +317,13 @@
     <ClInclude Include="Game\recordbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\helpstage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Game\resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\localsetupstage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

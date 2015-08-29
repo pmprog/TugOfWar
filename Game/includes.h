@@ -13,3 +13,6 @@
 #include "../Framework/Sound/audio.h"
 #include "../Framework/Sound/sfxcache.h"
 #include "../Framework/Primitives/vector2i.h"
+
+#include "../Framework/Transitions/strips.h"
+#include "../Framework/Transitions/tiled.h"

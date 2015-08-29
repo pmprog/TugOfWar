@@ -52,7 +52,12 @@ void TransitionTiled::PrepareTiles( TiledTransitions::Transition Style, int Tile
 	Source->Render();
 	TargetScreen = al_create_bitmap( DISPLAY->GetWidth(), DISPLAY->GetHeight() );
 	DISPLAY->SetTarget( TargetScreen );
-	Target->Render();
+	if( Target == nullptr )
+	{
+		al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
+	} else {
+		Target->Render();
+	}
 	DISPLAY->ClearTarget();
 
 	tileMap = (char*)malloc( sizeof(char) * tileWide * tileHigh );

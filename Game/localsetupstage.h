@@ -4,22 +4,12 @@
 #include "includes.h"
 #include "resources.h"
 
-
-class Menu : public Stage
+class LocalSetupStage : public Stage
 {
+
 	private:
-		int backgroundindex;
-		int menutime;
-		int rendertime;
-		TTFFont* titlefont;
-		TTFFont* optionfont;
-		int sliderindex;
-		int slidertarget;
-		
 
   public:
-		ALLEGRO_BITMAP* background;
-
     // Stage control
     virtual void Begin();
     virtual void Pause();
