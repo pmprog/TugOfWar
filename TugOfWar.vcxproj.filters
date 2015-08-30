@@ -326,5 +326,8 @@
     <ClInclude Include="Game\localsetupstage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\gameinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
