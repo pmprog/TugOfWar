@@ -15,7 +15,8 @@ class Menu : public Stage
 		TTFFont* optionfont;
 		int sliderindex;
 		int slidertarget;
-		
+
+		void GenerateBackground();
 
   public:
 		ALLEGRO_BITMAP* background;

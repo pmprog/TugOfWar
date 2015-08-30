@@ -5,7 +5,6 @@
 
 void Menu::Begin()
 {
-	backgroundindex = rand() % 3;
 	menutime = 0;
 	sliderindex = 0;
 	slidertarget = 0;
@@ -14,28 +13,8 @@ void Menu::Begin()
 	titlefont = FontCache::LoadFont( "resources/armalite.ttf", 80 );
 	optionfont = FontCache::LoadFont( "resources/armalite.ttf", 32 );
 
-	background = al_create_bitmap( 1024, 512 );
-	DISPLAY->SetTarget( background );
-
-	int iw = al_get_bitmap_width( GameResources::BackgroundTiles.at(backgroundindex) );
-	int ih = al_get_bitmap_height( GameResources::BackgroundTiles.at(backgroundindex) );
-	int bx = 0;
-	int by = 0;
-
-	al_hold_bitmap_drawing( true );
-	while( by < 512 )
-	{
-		while( bx < 1024 )
-		{
-			al_draw_bitmap( GameResources::BackgroundTiles.at(backgroundindex), bx, by, 0 );
-			bx += iw;
-		}
-		by += ih;
-		bx = 0;
-	}
-	al_hold_bitmap_drawing( false );
-
-	DISPLAY->ClearTarget();
+    background = nullptr;
+    GenerateBackground();
 
 	// AUDIO->PlayMusic( "resources/Paul Hannay (Feekzoid) - Last_Ninja_4_intro [1].ogg", true );
 }
@@ -47,6 +26,7 @@ void Menu::Pause()
 
 void Menu::Resume()
 {
+    // GenerateBackground();
 	// AUDIO->PlayMusic( "resources/Paul Hannay (Feekzoid) - Last_Ninja_4_intro [1].ogg", true );
 }
 
@@ -131,7 +111,7 @@ void Menu::Update()
 		sliderindex += 1600;
 		slidertarget = 1200;
 	}
-	
+
 }
 
 void Menu::Render()
@@ -145,16 +125,47 @@ void Menu::Render()
 	titlefont->DrawString( (DISPLAY->GetWidth() / 2) + 4, 24, "Tug Of War!", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
 	titlefont->DrawString( DISPLAY->GetWidth() / 2, 20, "Tug Of War!", FontHAlign::CENTRE, al_map_rgb( 255, 255, 0 ) );
 
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) - sliderindex, 420, "Local Game", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 400 - sliderindex, 420, "Network", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 800 - sliderindex, 420, "Help", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 1200 - sliderindex, 420, "Quit", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 1600 - sliderindex, 420, "Local Game", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) - 400 - sliderindex, 420, "Quit", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
+	optionfont->DrawString( (DISPLAY->GetWidth() / 2) - sliderindex, 420, "Local Game", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 400 - sliderindex, 420, "Network", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 800 - sliderindex, 420, "Help", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 1200 - sliderindex, 420, "Quit", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 1600 - sliderindex, 420, "Local Game", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( (DISPLAY->GetWidth() / 2) - 400 - sliderindex, 420, "Quit", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
 
 }
 
 bool Menu::IsTransition()
 {
 	return false;
+}
+
+void Menu::GenerateBackground()
+{
+	backgroundindex = rand() % 3;
+
+	if( background == nullptr )
+    {
+        background = al_create_bitmap( 1024, 512 );
+    }
+	DISPLAY->SetTarget( background );
+
+	int iw = al_get_bitmap_width( GameResources::BackgroundTiles.at(backgroundindex) );
+	int ih = al_get_bitmap_height( GameResources::BackgroundTiles.at(backgroundindex) );
+	int bx = 0;
+	int by = 0;
+
+	al_hold_bitmap_drawing( true );
+	while( by < 512 )
+	{
+		while( bx < 1024 )
+		{
+			al_draw_bitmap( GameResources::BackgroundTiles.at(backgroundindex), bx, by, 0 );
+			bx += iw;
+		}
+		by += ih;
+		bx = 0;
+	}
+	al_hold_bitmap_drawing( false );
+
+	DISPLAY->ClearTarget();
 }
