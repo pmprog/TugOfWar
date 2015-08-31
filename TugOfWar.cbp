@@ -151,6 +151,7 @@
 		<Unit filename="Game/boot.h" />
 		<Unit filename="Game/debugstage.cpp" />
 		<Unit filename="Game/debugstage.h" />
+		<Unit filename="Game/gameinfo.h" />
 		<Unit filename="Game/gamestage.cpp" />
 		<Unit filename="Game/gamestage.h" />
 		<Unit filename="Game/helpstage.cpp" />

@@ -45,6 +45,13 @@ void HelpStage::Render()
 	optionfont = FontCache::LoadFont( "resources/armalite.ttf", 32 );
 	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 2, 12, "Battle Matrix", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
 	optionfont->DrawString( (DISPLAY->GetWidth() / 2), 10, "Battle Matrix", FontHAlign::CENTRE, al_map_rgb( 255, 255, 0 ) );
+	GameResources::DrawTank( 0, 290, 100, Angle(0) );
+	GameResources::DrawTank( 0, 150, 210, Angle(90) );
+	GameResources::DrawTank( 1, 440, 100, Angle(0) );
+	GameResources::DrawTank( 1, 150, 310, Angle(90) );
+	GameResources::DrawTank( 2, 590, 100, Angle(0) );
+	GameResources::DrawTank( 2, 150, 410, Angle(90) );
+	/*
 	ALLEGRO_BITMAP* t = BitmapCache::LoadBitmap("resources/tankBlue.png");
 	al_draw_bitmap( t, 250, 80, 0 );
 	al_draw_bitmap( t, 100, 200, 0 );
@@ -57,8 +64,10 @@ void HelpStage::Render()
 	al_draw_bitmap( t, 550, 80, 0 );
 	al_draw_bitmap( t, 100, 400, 0 );
 	BitmapCache::UnloadBitmap("resources/tankRed.png");
+	*/
 
-	al_draw_line( 100, 175, 650, 175, al_map_rgb( 255, 255, 255 ), 4 );
+	al_draw_line( 100, 160, 650, 160, al_map_rgb( 255, 255, 255 ), 4 );
+	al_draw_line( 240, 60, 240, 460, al_map_rgb( 255, 255, 255 ), 4 );
 
 }
 
