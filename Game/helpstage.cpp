@@ -51,20 +51,19 @@ void HelpStage::Render()
 	GameResources::DrawTank( 1, 150, 310, Angle(90) );
 	GameResources::DrawTank( 2, 590, 100, Angle(0) );
 	GameResources::DrawTank( 2, 150, 410, Angle(90) );
-	/*
-	ALLEGRO_BITMAP* t = BitmapCache::LoadBitmap("resources/tankBlue.png");
-	al_draw_bitmap( t, 250, 80, 0 );
-	al_draw_bitmap( t, 100, 200, 0 );
-	BitmapCache::UnloadBitmap("resources/tankBlue.png");
-	t = BitmapCache::LoadBitmap("resources/tankGreen.png");
-	al_draw_bitmap( t, 400, 80, 0 );
-	al_draw_bitmap( t, 100, 300, 0 );
-	BitmapCache::UnloadBitmap("resources/tankGreen.png");
-	t = BitmapCache::LoadBitmap("resources/tankRed.png");
-	al_draw_bitmap( t, 550, 80, 0 );
-	al_draw_bitmap( t, 100, 400, 0 );
-	BitmapCache::UnloadBitmap("resources/tankRed.png");
-	*/
+
+
+	GameResources::DrawTank( 0, 440, 210, Angle(0) );
+	GameResources::DrawTank( 2, 590, 210, Angle(0) );
+	GameResources::DrawTank( 0, 290, 310, Angle(0) );
+	GameResources::DrawTank( 1, 590, 310, Angle(0) );
+	GameResources::DrawTank( 2, 290, 410, Angle(0) );
+	GameResources::DrawTank( 1, 440, 410, Angle(0) );
+
+	ALLEGRO_BITMAP* t = BitmapCache::LoadBitmap( "resources/smokeGrey4.png" );
+	al_draw_bitmap( t, 290 - (al_get_bitmap_width( t ) / 2), 210 - (al_get_bitmap_height( t ) / 2), 0 );
+	al_draw_bitmap( t, 440 - (al_get_bitmap_width( t ) / 2), 310 - (al_get_bitmap_height( t ) / 2), 0 );
+	al_draw_bitmap( t, 590 - (al_get_bitmap_width( t ) / 2), 410 - (al_get_bitmap_height( t ) / 2), 0 );
 
 	al_draw_line( 100, 160, 650, 160, al_map_rgb( 255, 255, 255 ), 4 );
 	al_draw_line( 240, 60, 240, 460, al_map_rgb( 255, 255, 255 ), 4 );
