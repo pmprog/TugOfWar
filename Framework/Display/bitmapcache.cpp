@@ -65,3 +65,21 @@ void BitmapCache::UnloadBitmap( ALLEGRO_BITMAP* Bitmap )
 		}
 	}
 }
+
+void BitmapCache::SetLoadMode( bool IntoSystemMemory )
+{
+	al_set_new_bitmap_flags( ( IntoSystemMemory ? ALLEGRO_MEMORY_BITMAP : ALLEGRO_VIDEO_BITMAP ) );
+}
+
+void BitmapCache::UploadToVideo()
+{
+	BitmapCache* b;
+
+	SetLoadMode( false );
+
+	for( std::vector<BitmapCache*>::iterator i = cache.begin(); i != cache.end(); i++ )
+	{
+		b = (BitmapCache*)*i;
+		al_convert_bitmap( b->Image );
+	}
+}

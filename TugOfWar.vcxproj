@@ -38,6 +38,7 @@
     <ClCompile Include="Framework\Network\network.cpp" />
     <ClCompile Include="Framework\Primitives\angle.cpp" />
     <ClCompile Include="Framework\Primitives\box.cpp" />
+    <ClCompile Include="Framework\Primitives\easing.cpp" />
     <ClCompile Include="Framework\Primitives\line.cpp" />
     <ClCompile Include="Framework\Primitives\list.cpp" />
     <ClCompile Include="Framework\Primitives\polygon.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="Framework\Network\network.h" />
     <ClInclude Include="Framework\Primitives\angle.h" />
     <ClInclude Include="Framework\Primitives\box.h" />
+    <ClInclude Include="Framework\Primitives\easing.h" />
     <ClInclude Include="Framework\Primitives\line.h" />
     <ClInclude Include="Framework\Primitives\list.h" />
     <ClInclude Include="Framework\Primitives\polygon.h" />

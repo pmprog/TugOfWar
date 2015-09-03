@@ -41,4 +41,9 @@ class Maths
 		{
 			return ( a < 0.0 ? a * -1 : a );
 		};
+
+		static float Pi()
+		{
+			return M_PI;
+		}
 };

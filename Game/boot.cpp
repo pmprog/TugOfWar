@@ -2,6 +2,7 @@
 #include "boot.h"
 #include "resources.h"
 #include "menu.h"
+#include "../Framework/Primitives/easing.h"
 
 bool BootUp::loadingComplete = false;
 
@@ -16,8 +17,10 @@ void BootUp::Begin()
 	logoSprite = BitmapCache::LoadBitmap("resources/polymath.png");
 	logoFadeIn = 0;
 
+#ifndef PANDORA
 	loadingthread = al_create_thread( ThreadedLoad, nullptr );
 	al_start_thread( loadingthread );
+#endif
 }
 
 void BootUp::Pause()
@@ -52,23 +55,24 @@ void BootUp::Update()
   {
     logoFadeIn--;
   } else {
-    logoFadeIn++;
-  }
-
-	if( logoFadeIn > 40 )
-  {
-  } else if( logoFadeIn > 37 ) {
-  } else if( logoFadeIn > 34 ) {
-  } else if( logoFadeIn > 31 ) {
-  } else if( logoFadeIn > 28 ) {
-  } else if( logoFadeIn > 25 ) {
-  } else {
+		if( logoFadeIn < 50 )
+		{
+			logoFadeIn++;
+		}
   }
 
 	if( bootBarSize < DISPLAY->GetWidth() )
 	{
 		bootBarSize += bootBarAdjust;
 	}
+
+#ifdef PANDORA
+	// Don't thread loading in Pandora
+	if( !loadingComplete )
+	{
+		ThreadedLoad( nullptr, nullptr );
+	}
+#endif
 
 	// Only allow completion when all resources are loaded
 	if( loadingComplete && bootBarSize >= DISPLAY->GetWidth() && !logoFadeOut )
@@ -88,10 +92,11 @@ void BootUp::Render()
 {
 	al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
 
+	int logoh = al_get_bitmap_height(logoSprite);
 	int logox = (DISPLAY->GetWidth() - al_get_bitmap_width(logoSprite)) / 2;
-	int logoy = (DISPLAY->GetHeight() - al_get_bitmap_height(logoSprite)) / 2;
+	int logoy = (DISPLAY->GetHeight() - logoh) / 2;
 
-	al_draw_bitmap( logoSprite, logox, logoy, 0 );
+	al_draw_bitmap( logoSprite, logox, Easing::EaseOutBounce( logoFadeIn, -logoh, logoy + logoh, 50 ), 0 ); // logoy, 0 );
 
 	int xPos = (DISPLAY->GetWidth() / 2) - (bootBarSize / 2);
 	int yPos = DISPLAY->GetHeight() - 24;

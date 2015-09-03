@@ -159,6 +159,9 @@
     <ClCompile Include="Game\localsetupstage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\Primitives\easing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Display\animation.h">
@@ -327,6 +330,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\gameinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Primitives\easing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
