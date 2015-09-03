@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "localsetupstage.h"
 #include "helpstage.h"
+#include "../Framework/Primitives/easing.h"
 
 void Menu::Begin()
 {
@@ -51,12 +52,16 @@ void Menu::EventOccurred(Event *e)
 
 		if( e->Data.Keyboard.KeyCode == ALLEGRO_KEY_LEFT )
     {
+			sliderstart = menutime;
+			sliderprevious = sliderindex;
       // FRAMEWORK->ProgramStages->Push( new GameStage() );
 			slidertarget = slidertarget - 400;
       return;
     }
 		if( e->Data.Keyboard.KeyCode == ALLEGRO_KEY_RIGHT )
     {
+			sliderstart = menutime;
+			sliderprevious = sliderindex;
       // FRAMEWORK->ProgramStages->Push( new GameStage() );
 			slidertarget = slidertarget + 400;
       return;
@@ -96,18 +101,15 @@ void Menu::Update()
 	int sliderdiff = 0;
 	if( sliderindex != slidertarget )
 	{
-		sliderdiff = (slidertarget - sliderindex) / 5;
-		if( sliderindex == 0 )
-		{
-			sliderindex = ( sliderindex > slidertarget ? -1 : 1 );
-		}
-		sliderindex += sliderdiff;
+		sliderindex = Easing::EaseOutBack( menutime - sliderstart, sliderprevious, slidertarget - sliderprevious, FRAMEWORK->GetFramesPerSecond(), 0 );
 	}
 	if( sliderindex > 1200 && slidertarget == 1600 )
 	{
+		sliderprevious -= 1600;
 		sliderindex -= 1600;
 		slidertarget = 0;
 	} else if( sliderindex < 0 && slidertarget == -400 ) {
+		sliderprevious += 1600;
 		sliderindex += 1600;
 		slidertarget = 1200;
 	}

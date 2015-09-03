@@ -15,6 +15,8 @@ class Menu : public Stage
 		TTFFont* optionfont;
 		int sliderindex;
 		int slidertarget;
+		int sliderprevious;
+		int sliderstart;
 
 		void GenerateBackground();
 
