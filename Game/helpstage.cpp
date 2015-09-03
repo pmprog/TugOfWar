@@ -27,7 +27,7 @@ void HelpStage::EventOccurred(Event *e)
 		if( e->Data.Keyboard.KeyCode == ALLEGRO_KEY_ESCAPE )
 		{
 			// delete FRAMEWORK->ProgramStages->Pop();
-			FRAMEWORK->ProgramStages->Push( new TransitionStrips( FRAMEWORK->GetFramesPerSecond() / 2, 6 )  );
+			FRAMEWORK->ProgramStages->Push( new TransitionStrips( FRAMEWORK->GetFramesPerSecond() / 2, 12 )  );
 			return;
 		}
 	}

@@ -77,7 +77,7 @@ void Menu::EventOccurred(Event *e)
 					break;
 				case 2:
 					// Help
-					FRAMEWORK->ProgramStages->Push( new TransitionStrips( new HelpStage(), FRAMEWORK->GetFramesPerSecond() / 2, 6 )  );
+					FRAMEWORK->ProgramStages->Push( new TransitionStrips( new HelpStage(), FRAMEWORK->GetFramesPerSecond() / 2, 12 )  );
 					break;
 				case 3:
 					// Settings
@@ -177,6 +177,9 @@ void Menu::RenderHelp(int X)
 	{
 		return;
 	}
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/helpBlack.png" ), X + 4 - 85, 124, 0 );
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/helpWhite.png" ), X - 85, 120, 0 );
+
 	optionfont->DrawString( X + 4, 424, "Help", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
 	optionfont->DrawString( X, 420, "Help", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
 }
@@ -187,6 +190,9 @@ void Menu::RenderSettings(int X)
 	{
 		return;
 	}
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/settingsBlack.png" ), X + 4 - 141, 124, 0 );
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/settingsWhite.png" ), X - 141, 120, 0 );
+
 	optionfont->DrawString( X + 4, 424, "Settings", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
 	optionfont->DrawString( X, 420, "Settings", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
 }
@@ -197,6 +203,8 @@ void Menu::RenderQuit(int X)
 	{
 		return;
 	}
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/exitBlack.png" ), X + 4 - 106, 124, 0 );
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/exitWhite.png" ), X - 106, 120, 0 );
 	optionfont->DrawString( X + 4, 424, "Quit", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
 	optionfont->DrawString( X, 420, "Quit", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
 }
