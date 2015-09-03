@@ -8,6 +8,7 @@ class LocalSetupStage : public Stage
 {
 
 	private:
+		TTFFont* optionfont;
 
   public:
     // Stage control
