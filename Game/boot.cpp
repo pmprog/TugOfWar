@@ -17,7 +17,8 @@ void BootUp::Begin()
 	logoSprite = BitmapCache::LoadBitmap("resources/polymath.png");
 	logoFadeIn = 0;
 
-#ifndef PANDORA
+	BitmapCache::SetLoadMode( true );
+#ifndef PANDORA_NOTHREAD
 	loadingthread = al_create_thread( ThreadedLoad, nullptr );
 	al_start_thread( loadingthread );
 #endif
@@ -66,7 +67,7 @@ void BootUp::Update()
 		bootBarSize += bootBarAdjust;
 	}
 
-#ifdef PANDORA
+#ifdef PANDORA_NOTHREAD
 	// Don't thread loading in Pandora
 	if( !loadingComplete )
 	{
@@ -105,6 +106,8 @@ void BootUp::Render()
 
 void BootUp::StartGame()
 {
+	BitmapCache::SetLoadMode( false );
+	BitmapCache::UploadToVideo();
 	delete Framework::System->ProgramStages->Pop();
 	Framework::System->ProgramStages->Push( new Menu() );
 }
@@ -117,6 +120,10 @@ bool BootUp::IsTransition()
 void* BootUp::ThreadedLoad( ALLEGRO_THREAD*, void* )
 {
 	// Load all resources for caching
+
+	BitmapCache::LoadBitmap("resources/pcBlack.png");
+	BitmapCache::LoadBitmap("resources/pcWhite.png");
+
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/grass.png") );
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/sand.png") );
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/dirt.png") );

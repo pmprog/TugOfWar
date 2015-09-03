@@ -4,6 +4,7 @@
 #include "includes.h"
 #include "resources.h"
 
+#define MENU_SPACING	600
 
 class Menu : public Stage
 {
@@ -19,6 +20,11 @@ class Menu : public Stage
 		int sliderstart;
 
 		void GenerateBackground();
+		void RenderLocal(int X);
+		void RenderNetwork(int X);
+		void RenderHelp(int X);
+		void RenderSettings(int X);
+		void RenderQuit(int X);
 
   public:
 		ALLEGRO_BITMAP* background;

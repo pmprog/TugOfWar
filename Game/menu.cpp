@@ -45,7 +45,6 @@ void Menu::EventOccurred(Event *e)
 	{
 		if( e->Data.Keyboard.KeyCode == ALLEGRO_KEY_ESCAPE )
 		{
-			// FRAMEWORK->ShutdownFramework();
 			FRAMEWORK->ProgramStages->Push( new TransitionTiled( TiledTransitions::SPIRAL_INWARDS, 6, 6 ) );
 			return;
 		}
@@ -54,37 +53,37 @@ void Menu::EventOccurred(Event *e)
     {
 			sliderstart = menutime;
 			sliderprevious = sliderindex;
-      // FRAMEWORK->ProgramStages->Push( new GameStage() );
-			slidertarget = slidertarget - 400;
+			slidertarget = slidertarget - MENU_SPACING;
       return;
     }
 		if( e->Data.Keyboard.KeyCode == ALLEGRO_KEY_RIGHT )
     {
 			sliderstart = menutime;
 			sliderprevious = sliderindex;
-      // FRAMEWORK->ProgramStages->Push( new GameStage() );
-			slidertarget = slidertarget + 400;
+			slidertarget = slidertarget + MENU_SPACING;
       return;
     }
 
 		if( e->Data.Keyboard.KeyCode == ALLEGRO_KEY_SPACE || e->Data.Keyboard.KeyCode == ALLEGRO_KEY_ENTER || e->Data.Keyboard.KeyCode == ALLEGRO_KEY_PGDN || e->Data.Keyboard.KeyCode == ALLEGRO_KEY_PGUP || e->Data.Keyboard.KeyCode == ALLEGRO_KEY_HOME || e->Data.Keyboard.KeyCode == ALLEGRO_KEY_END || e->Data.Keyboard.KeyCode == ALLEGRO_KEY_LCTRL || e->Data.Keyboard.KeyCode == ALLEGRO_KEY_ALT )
     {
-			switch( slidertarget )
+			switch( slidertarget / MENU_SPACING )
 			{
 				case 0:
 					// Local
 					FRAMEWORK->ProgramStages->Push( new TransitionTiled( new LocalSetupStage(), TiledTransitions::NORTHWEST_TO_SOUTHEAST, 12, 12 ) );
 					break;
-				case 400:
+				case 1:
 					// Network
 					break;
-				case 800:
+				case 2:
 					// Help
 					FRAMEWORK->ProgramStages->Push( new TransitionStrips( new HelpStage(), FRAMEWORK->GetFramesPerSecond() / 2, 6 )  );
 					break;
-				case 1200:
+				case 3:
+					// Settings
+					break;
+				case 4:
 					// Quit
-					// FRAMEWORK->ShutdownFramework();
 					FRAMEWORK->ProgramStages->Push( new TransitionTiled( TiledTransitions::SPIRAL_INWARDS, 6, 6 ) );
 					break;
 			}
@@ -103,15 +102,15 @@ void Menu::Update()
 	{
 		sliderindex = Easing::EaseOutBack( menutime - sliderstart, sliderprevious, slidertarget - sliderprevious, FRAMEWORK->GetFramesPerSecond(), 0 );
 	}
-	if( sliderindex > 1200 && slidertarget == 1600 )
+	if( sliderindex > (MENU_SPACING * 4) && slidertarget == (MENU_SPACING * 5) )
 	{
-		sliderprevious -= 1600;
-		sliderindex -= 1600;
+		sliderprevious -= (MENU_SPACING * 5);
+		sliderindex -= (MENU_SPACING * 5);
 		slidertarget = 0;
-	} else if( sliderindex < 0 && slidertarget == -400 ) {
-		sliderprevious += 1600;
-		sliderindex += 1600;
-		slidertarget = 1200;
+	} else if( sliderindex < 0 && slidertarget == -MENU_SPACING ) {
+		sliderprevious += (MENU_SPACING * 5);
+		sliderindex += (MENU_SPACING * 5);
+		slidertarget = (MENU_SPACING * 4);
 	}
 
 }
@@ -127,13 +126,79 @@ void Menu::Render()
 	titlefont->DrawString( (DISPLAY->GetWidth() / 2) + 4, 24, "Tug Of War!", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
 	titlefont->DrawString( DISPLAY->GetWidth() / 2, 20, "Tug Of War!", FontHAlign::CENTRE, al_map_rgb( 255, 255, 0 ) );
 
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) - sliderindex, 420, "Local Game", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 400 - sliderindex, 420, "Network", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 800 - sliderindex, 420, "Help", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 1200 - sliderindex, 420, "Quit", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) + 1600 - sliderindex, 420, "Local Game", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
-	optionfont->DrawString( (DISPLAY->GetWidth() / 2) - 400 - sliderindex, 420, "Quit", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	int centrepos = (DISPLAY->GetWidth() / 2) - sliderindex;
+	RenderQuit( centrepos - (MENU_SPACING) );
+	RenderLocal( centrepos );
+	RenderNetwork( centrepos + (MENU_SPACING) );
+	RenderHelp( centrepos + (MENU_SPACING * 2) );
+	RenderSettings( centrepos + (MENU_SPACING * 3) );
+	RenderQuit( centrepos + (MENU_SPACING * 4) );
+	RenderLocal( centrepos + (MENU_SPACING * 5) );
 
+	if( menutime % FRAMEWORK->GetFramesPerSecond() < (FRAMEWORK->GetFramesPerSecond() / 2) )
+	{
+		al_draw_bitmap( BitmapCache::LoadBitmap( "resources/arrowLeft.png" ), 10, 420, 0 );
+		al_draw_bitmap( BitmapCache::LoadBitmap( "resources/arrowRight.png" ), 740, 420, 0 );
+	}
+
+}
+
+void Menu::RenderLocal(int X)
+{
+	if( X - (MENU_SPACING / 2) >= DISPLAY->GetWidth() || X + (MENU_SPACING / 2) <= 0 )
+	{
+		return;
+	}
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/pcBlack.png" ), X + 4 - 110, 124, 0 );
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/pcWhite.png" ), X - 110, 120, 0 );
+
+	optionfont->DrawString( X + 4, 424, "Local Game", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( X, 420, "Local Game", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
+}
+
+void Menu::RenderNetwork(int X)
+{
+	if( X - (MENU_SPACING / 2) >= DISPLAY->GetWidth() || X + (MENU_SPACING / 2) <= 0 )
+	{
+		return;
+	}
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/pcBlack.png" ), X - 220, 124, 0 );
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/pcWhite.png" ), X - 224, 120, 0 );
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/pcBlack.png" ), X + 8, 124, 0 );
+	al_draw_bitmap( BitmapCache::LoadBitmap( "resources/pcWhite.png" ), X + 4, 120, 0 );
+	optionfont->DrawString( X + 4, 424, "Network", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( X, 420, "Network", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
+
+}
+
+void Menu::RenderHelp(int X)
+{
+	if( X - (MENU_SPACING / 2) >= DISPLAY->GetWidth() || X + (MENU_SPACING / 2) <= 0 )
+	{
+		return;
+	}
+	optionfont->DrawString( X + 4, 424, "Help", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( X, 420, "Help", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
+}
+
+void Menu::RenderSettings(int X)
+{
+	if( X - (MENU_SPACING / 2) >= DISPLAY->GetWidth() || X + (MENU_SPACING / 2) <= 0 )
+	{
+		return;
+	}
+	optionfont->DrawString( X + 4, 424, "Settings", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( X, 420, "Settings", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
+}
+
+void Menu::RenderQuit(int X)
+{
+	if( X - (MENU_SPACING / 2) >= DISPLAY->GetWidth() || X + (MENU_SPACING / 2) <= 0 )
+	{
+		return;
+	}
+	optionfont->DrawString( X + 4, 424, "Quit", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( X, 420, "Quit", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
 }
 
 bool Menu::IsTransition()
