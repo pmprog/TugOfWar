@@ -18,7 +18,7 @@ void BootUp::Begin()
 	logoFadeIn = 0;
 
 	BitmapCache::SetLoadMode( true );
-#ifndef PANDORA_NOTHREAD
+#ifndef NOTHREADLOAD
 	loadingthread = al_create_thread( ThreadedLoad, nullptr );
 	al_start_thread( loadingthread );
 #endif
@@ -67,7 +67,7 @@ void BootUp::Update()
 		bootBarSize += bootBarAdjust;
 	}
 
-#ifdef PANDORA_NOTHREAD
+#ifdef NOTHREADLOAD
 	// Don't thread loading in Pandora
 	if( !loadingComplete )
 	{
@@ -106,8 +106,10 @@ void BootUp::Render()
 
 void BootUp::StartGame()
 {
+#ifndef NOTHREADLOAD
 	BitmapCache::SetLoadMode( false );
 	BitmapCache::UploadToVideo();
+#endif
 	delete Framework::System->ProgramStages->Pop();
 	Framework::System->ProgramStages->Push( new Menu() );
 }
