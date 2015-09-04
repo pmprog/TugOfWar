@@ -9,6 +9,10 @@ class LocalSetupStage : public Stage
 
 	private:
 		TTFFont* optionfont;
+		SpriteSheet* bluepanel;
+		SpriteSheet* redpanel;
+
+		void DrawPanel(SpriteSheet* PanelGraphics, int X, int Y, int TilesWide, int TilesHigh, int HeaderTilesWide);
 
   public:
     // Stage control

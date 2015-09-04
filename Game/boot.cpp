@@ -132,6 +132,9 @@ void* BootUp::ThreadedLoad( ALLEGRO_THREAD*, void* )
 	BitmapCache::LoadBitmap("resources/exitBlack.png");
 	BitmapCache::LoadBitmap("resources/exitWhite.png");
 
+	BitmapCache::LoadBitmap("resources/metalPanel_blueCorner.png");
+	BitmapCache::LoadBitmap("resources/metalPanel_redCorner.png");
+
 
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/grass.png") );
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/sand.png") );
