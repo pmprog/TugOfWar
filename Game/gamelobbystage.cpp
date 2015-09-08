@@ -133,7 +133,7 @@ void GameLobbyStage::InputEvent(InputItems::ItemSet inputevent)
 			}
 			break;
 		case InputItems::START:
-			
+
 			if( networkconnection == nullptr || networkconnection->IsServer() )
 			{
 				//FRAMEWORK->ProgramStages->Push( new GameStage( this ) );
@@ -235,17 +235,20 @@ bool GameLobbyStage::IsTransition()
 void GameLobbyStage::RenderPlayerSlot(bool BlueTeam, int Index, bool Present, std::string Name, bool Local, bool AI, int X, int Y)
 {
 	SpriteSheet* btnimg = GameResources::WhiteButtonDown;
+	bool btnup = false;
 
 	if( networkconnection == nullptr || networkconnection->IsServer() )
 	{
 		if( selection == Index && currentinfo->BlueA_Present )
 		{
 			btnimg = (BlueTeam ? GameResources::BlueButtonUp : GameResources::RedButtonUp);
+			btnup = true;
 		} else if( currentinfo->BlueA_Present ) {
 			btnimg = (BlueTeam ? GameResources::BlueButtonUp : GameResources::RedButtonDown);
 		} else if( selection == Index ) {
 			btnimg = GameResources::WhiteButtonUp;
+			btnup = true;
 		}
 	}
-	GameResources::DrawButton( btnimg, X, Y, 23, 3 );
+	GameResources::DrawButton( btnimg, btnup, X, Y, 23, 3 );
 }

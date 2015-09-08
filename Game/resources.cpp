@@ -15,7 +15,7 @@ void GameResources::InitResources()
 {
 	BluePanel = new SpriteSheet( "resources/metalPanel_blueCorner.png", 30, 30 );
 	RedPanel = new SpriteSheet( "resources/metalPanel_redCorner.png", 30, 30 );
-	
+
 	WhiteButtonUp = new SpriteSheet( "resources/buttonGrey01.png" );
 	WhiteButtonUp->AddSprite( 0, 0, 16, 16 );
 	WhiteButtonUp->AddSprite( 16, 0, 16, 16 );
@@ -126,8 +126,12 @@ void GameResources::DrawPanel(SpriteSheet* Graphics, int X, int Y, int TilesWide
 	al_hold_bitmap_drawing( false );
 }
 
-void GameResources::DrawButton(SpriteSheet* Graphics, int X, int Y, int TilesWide, int TilesHigh)
+void GameResources::DrawButton(SpriteSheet* Graphics, bool IsRaised, int X, int Y, int TilesWide, int TilesHigh)
 {
+  if( IsRaised )
+  {
+    Y -= 4;
+  }
 	al_hold_bitmap_drawing( true );
 	for( int y = 0; y < TilesHigh; y++ )
 	{

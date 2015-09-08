@@ -21,5 +21,5 @@ class GameResources
 
 		static void DrawTank(int Colour, int X, int Y, Angle Rotation);
 		static void DrawPanel(SpriteSheet* Graphics, int X, int Y, int TilesWide, int TilesHigh, int HeaderTilesWide);
-		static void DrawButton(SpriteSheet* Graphics, int X, int Y, int TilesWide, int TilesHigh);
+		static void DrawButton(SpriteSheet* Graphics, bool IsRaised, int X, int Y, int TilesWide, int TilesHigh);
 };
