@@ -1,8 +1,9 @@
 
 #include "menu.h"
-#include "localsetupstage.h"
+#include "gamelobbystage.h"
 #include "helpstage.h"
 #include "../Framework/Primitives/easing.h"
+#include "input.h"
 
 void Menu::Begin()
 {
@@ -70,7 +71,7 @@ void Menu::EventOccurred(Event *e)
 			{
 				case 0:
 					// Local
-					FRAMEWORK->ProgramStages->Push( new TransitionTiled( new LocalSetupStage(), TiledTransitions::NORTHWEST_TO_SOUTHEAST, 12, 12 ) );
+					FRAMEWORK->ProgramStages->Push( new TransitionTiled( new GameLobbyStage(), TiledTransitions::NORTHWEST_TO_SOUTHEAST, 12, 12 ) );
 					break;
 				case 1:
 					// Network
@@ -137,8 +138,8 @@ void Menu::Render()
 
 	if( menutime % FRAMEWORK->GetFramesPerSecond() < (FRAMEWORK->GetFramesPerSecond() / 2) )
 	{
-		al_draw_bitmap( BitmapCache::LoadBitmap( "resources/arrowLeft.png" ), 10, 420, 0 );
-		al_draw_bitmap( BitmapCache::LoadBitmap( "resources/arrowRight.png" ), 740, 420, 0 );
+		al_draw_bitmap( Input::GetIcon( InputItems::LEFT ), 10, 420, 0 );
+		al_draw_bitmap( Input::GetIcon( InputItems::RIGHT ), 740, 420, 0 );
 	}
 
 }

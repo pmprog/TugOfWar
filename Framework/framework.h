@@ -66,4 +66,6 @@ class Framework
 
 		void RegisterEventSource( ALLEGRO_EVENT_SOURCE* Source );
 		void UnregisterEventSource( ALLEGRO_EVENT_SOURCE* Source );
+
+		bool HasController();
 };

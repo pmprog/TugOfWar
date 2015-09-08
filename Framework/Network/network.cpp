@@ -6,10 +6,11 @@
 
 Network::Network( int Port )
 {
-
+	isServer = true;
 	serverAddress.host = ENET_HOST_ANY;
 	serverAddress.port = Port;
 	networkPeer = 0;
+	networkPeers.clear();
 	localHost = enet_host_create ( &serverAddress /* the address to bind the server host to */,
 		32 /* allow up to 32 clients and/or outgoing connections */,
 		1 /* allow up to 2 channels to be used, 0 and 1 */,
@@ -24,6 +25,7 @@ Network::Network( int Port )
 
 Network::Network( std::string Server, int Port )
 {
+	isServer = false;
 	localHost = enet_host_create (NULL /* create a client host */,
 		1 /* only allow 1 outgoing connection */,
 		1 /* allow up 2 channels to be used, 0 and 1 */,
@@ -44,6 +46,8 @@ Network::Network( std::string Server, int Port )
 		localHost = 0;
 		return;
 	}
+
+	networkPeers.push_back( networkPeer );
 
 	/* Wait up to 6 seconds for the connection attempt to succeed. */
 	ENetEvent ev;
@@ -66,7 +70,7 @@ Network::Network( std::string Server, int Port )
 
 Network::~Network()
 {
-	if( networkPeer != 0 )
+	if( networkPeers.size() > 0 )
 	{
 		Disconnect();
 	}
@@ -79,7 +83,7 @@ Network::~Network()
 
 void Network::AcceptConnection( ENetPeer* From )
 {
-	networkPeer = From;
+	networkPeers.push_back( From );
 
 	Event* fwEvent;
 	fwEvent = new Event();
@@ -91,8 +95,10 @@ void Network::AcceptConnection( ENetPeer* From )
 
 void Network::Disconnect()
 {
-	if( IsActive() && IsConnected() )
+	while( IsActive() && IsConnected() )
 	{
+		networkPeer = networkPeers.back();
+		networkPeers.pop_back();
 		enet_peer_disconnect( networkPeer, 0 );
 		enet_peer_reset( networkPeer );
 		networkPeer = 0;
@@ -106,7 +112,12 @@ bool Network::IsActive()
 
 bool Network::IsConnected()
 {
-	return ( networkPeer != 0 );
+	return ( networkPeers.size() > 0 );
+}
+
+bool Network::IsServer()
+{
+	return isServer;
 }
 
 void Network::Update()
@@ -161,7 +172,10 @@ void Network::Send( void* Packet, int PacketLength, bool Reliable )
 	}
 
 	ENetPacket * packet = enet_packet_create( Packet, PacketLength, ( Reliable ? ENET_PACKET_FLAG_RELIABLE : 0 ));
-	enet_peer_send( networkPeer, 0, packet );
+	for( int idx = 0; idx < networkPeers.size(); idx++ )
+	{
+		enet_peer_send( networkPeers.at(idx), 0, packet );
+	}
 	enet_host_flush( localHost );
 }
 

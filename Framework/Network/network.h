@@ -14,10 +14,11 @@ class Network
 {
 
 	private:
+		bool isServer;
 		ENetAddress serverAddress;
 		ENetHost*		localHost;
 		ENetPeer*		networkPeer;
-
+		std::vector<ENetPeer*> networkPeers;
 
 	public:
 		/*
@@ -70,6 +71,14 @@ class Network
 				*Boolean*
     */
 		bool IsConnected();
+
+		/*
+			Function: IsServer
+			Indicates whether the instance is acting as a server (listening)
+			Returns:
+				*Boolean*
+    */
+		bool IsServer();
 
 		/*
 			Function: Update

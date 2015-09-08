@@ -7,9 +7,6 @@ class GameInfo
 {
 
 	public:
-
-		int TeamSize;
-
 		bool BlueA_Present;
 		std::string BlueA_Name;
 		bool BlueA_Local;
@@ -44,7 +41,6 @@ class GameInfo
 
 		GameInfo()
 		{
-			TeamSize = 1;
 			BlueA_Present = false;
 			BlueB_Present = false;
 			BlueC_Present = false;

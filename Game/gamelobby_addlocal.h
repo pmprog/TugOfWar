@@ -1,20 +1,17 @@
 
 #pragma once
 
-#include "includes.h"
-#include "resources.h"
+#include "gamelobbystage.h"
 
-class GameLobbyStage : public Stage
+class GameLobbyAddLocalStage : public Stage
 {
 
 	private:
 		TTFFont* optionfont;
-		Network* networkconnection;
+		GameLobbyStage* lobby;
 
   public:
-
-		GameLobbyStage();
-		GameLobbyStage(Network* Connection);
+		GameLobbyAddLocalStage( GameLobbyStage* Owner );
 
     // Stage control
     virtual void Begin();

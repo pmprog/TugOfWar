@@ -156,10 +156,22 @@
     <ClCompile Include="Game\resources.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\localsetupstage.cpp">
+    <ClCompile Include="Framework\Primitives\easing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Framework\Primitives\easing.cpp">
+    <ClCompile Include="Game\gamelobbystage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\gamelobby_addai.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\gamelobby_addlocal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\gamelobby_kick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -326,13 +338,25 @@
     <ClInclude Include="Game\resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\localsetupstage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Game\gameinfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Framework\Primitives\easing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\gamelobbystage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\gamelobby_addai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\gamelobby_addlocal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\gamelobby_kick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

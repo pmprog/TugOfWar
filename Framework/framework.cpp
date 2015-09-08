@@ -510,3 +510,13 @@ void Framework::GetJoystickIDs()
 		joystickIDs.push_back( al_get_joystick( i ) );
 	}
 }
+
+bool Framework::HasController()
+{
+#ifdef PANDORA
+	return true;
+#else
+	GetJoystickIDs();
+	return (joystickIDs.size() > 0);
+#endif
+}
