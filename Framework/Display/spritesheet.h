@@ -49,4 +49,6 @@ class SpriteSheet
 
 		ALLEGRO_BITMAP* ExtractFrame( int FrameNumber );
 
+		SpriteSheet* CloneTo( std::string Filename );
+
 };

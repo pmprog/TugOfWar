@@ -161,8 +161,8 @@
 		<Unit filename="Game/helpstage.cpp" />
 		<Unit filename="Game/helpstage.h" />
 		<Unit filename="Game/includes.h" />
-		<Unit filename="Game/localsetupstage.cpp" />
-		<Unit filename="Game/localsetupstage.h" />
+		<Unit filename="Game/gamelobbystage.cpp" />
+		<Unit filename="Game/gamelobbystage.h" />
 		<Unit filename="Game/menu.cpp" />
 		<Unit filename="Game/menu.h" />
 		<Unit filename="Game/recordbuffer.cpp" />

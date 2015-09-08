@@ -246,3 +246,16 @@ ALLEGRO_BITMAP* SpriteSheet::ExtractFrame( int FrameNumber )
 
 	return frame;
 }
+
+SpriteSheet* SpriteSheet::CloneTo( std::string Filename )
+{
+	SpriteSheet* result = new SpriteSheet( Filename );
+
+	for( int i = 0; i < frames.size(); i++ )
+	{
+		SpriteSheetRegion* r = frames.at( i );
+		result->AddSprite( r->X, r->Y, r->Width, r->Height );
+	}
+
+	return result;
+}

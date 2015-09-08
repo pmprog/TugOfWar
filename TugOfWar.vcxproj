@@ -56,7 +56,7 @@
     <ClCompile Include="Game\debugstage.cpp" />
     <ClCompile Include="Game\gamestage.cpp" />
     <ClCompile Include="Game\helpstage.cpp" />
-    <ClCompile Include="Game\localsetupstage.cpp" />
+    <ClCompile Include="Game\gamelobbystage.cpp" />
     <ClCompile Include="Game\menu.cpp" />
     <ClCompile Include="Game\recordbuffer.cpp" />
     <ClCompile Include="Game\resources.cpp" />
@@ -115,7 +115,7 @@
     <ClInclude Include="Game\gamestage.h" />
     <ClInclude Include="Game\helpstage.h" />
     <ClInclude Include="Game\includes.h" />
-    <ClInclude Include="Game\localsetupstage.h" />
+    <ClInclude Include="Game\gamelobbystage.h" />
     <ClInclude Include="Game\menu.h" />
     <ClInclude Include="Game\recordbuffer.h" />
     <ClInclude Include="Game\resources.h" />
