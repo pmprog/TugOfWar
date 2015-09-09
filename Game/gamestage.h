@@ -3,6 +3,7 @@
 
 #include "includes.h"
 #include "resources.h"
+#include "gameinfo.h"
 
 class GameStage : public Stage
 {

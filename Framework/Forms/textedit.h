@@ -39,5 +39,6 @@ class TextEdit : public Control
 		void SetText( std::string Text );
 
 		void BeginEdit();
+		bool IsEditing();
 };
 

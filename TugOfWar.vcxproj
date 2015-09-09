@@ -54,9 +54,7 @@
     <ClCompile Include="Framework\Transitions\tiled.cpp" />
     <ClCompile Include="Game\boot.cpp" />
     <ClCompile Include="Game\debugstage.cpp" />
-    <ClCompile Include="Game\gamelobby_addai.cpp" />
     <ClCompile Include="Game\gamelobby_addlocal.cpp" />
-    <ClCompile Include="Game\gamelobby_kick.cpp" />
     <ClCompile Include="Game\gamestage.cpp" />
     <ClCompile Include="Game\helpstage.cpp" />
     <ClCompile Include="Game\gamelobbystage.cpp" />
@@ -116,9 +114,10 @@
     <ClInclude Include="Game\boot.h" />
     <ClInclude Include="Game\debugstage.h" />
     <ClInclude Include="Game\gameinfo.h" />
-    <ClInclude Include="Game\gamelobby_addai.h" />
+    <ClInclude Include="Game\gameturn_ai.h" />
     <ClInclude Include="Game\gamelobby_addlocal.h" />
-    <ClInclude Include="Game\gamelobby_kick.h" />
+    <ClInclude Include="Game\gameturn_network.h" />
+    <ClInclude Include="Game\gameturn_player.h" />
     <ClInclude Include="Game\gamestage.h" />
     <ClInclude Include="Game\helpstage.h" />
     <ClInclude Include="Game\includes.h" />

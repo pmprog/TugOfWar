@@ -241,3 +241,8 @@ void TextEdit::BeginEdit()
 {
 	editting = true;
 }
+
+bool TextEdit::IsEditing()
+{
+	return editting;
+}

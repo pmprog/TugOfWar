@@ -2,9 +2,7 @@
 #include "gamelobbystage.h"
 #include "menu.h"
 #include "input.h"
-#include "gamelobby_addai.h"
 #include "gamelobby_addlocal.h"
-#include "gamelobby_kick.h"
 
 GameLobbyStage::GameLobbyStage()
 {
@@ -112,7 +110,22 @@ void GameLobbyStage::InputEvent(InputItems::ItemSet inputevent)
 		case InputItems::X:
 			if( networkconnection == nullptr )
 			{
-				FRAMEWORK->ProgramStages->Push( new GameLobbyAddLocalStage( this ) );
+				PlayerInfo* p = nullptr;
+				if( selectionteamisblue )
+				{
+					if( currentinfo->BlueTeam[selection] == nullptr)
+					{
+						currentinfo->BlueTeam[selection] = new PlayerInfo( "", true, false );
+					}
+					p = currentinfo->BlueTeam[selection];
+				} else {
+					if( currentinfo->RedTeam[selection] == nullptr)
+					{
+						currentinfo->RedTeam[selection] = new PlayerInfo( "", true, false );
+					}
+					p = currentinfo->RedTeam[selection];
+				}
+				FRAMEWORK->ProgramStages->Push( new GameLobbyAddLocalStage( p ) );
 			}
 			break;
 		case InputItems::B:
