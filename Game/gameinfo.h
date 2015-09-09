@@ -3,50 +3,55 @@
 
 #include <string>
 
+class PlayerInfo
+{
+	public:
+		std::string Name;
+		bool Local;
+		bool AI;
+
+		int Money;
+		float IntrestRate;
+		int DelayIntrest;
+		int AttackMap[5][3];
+		int CurrentTier;
+
+		PlayerInfo(std::string PlayerName, bool IsLocal, bool IsAI)
+		{
+			Name = PlayerName;
+			Local = IsLocal;
+			AI = IsAI;
+
+			// Start with 100c, intrest rate of 10%, and a tiering of 1 (in case I put tank tiers in)
+			Money = 100;
+			IntrestRate = 0.10f;
+			DelayIntrest = 0;
+			CurrentTier = 1;
+
+			for( int y = 0; y < 3; y++ )
+			{
+				for( int x = 0; x < 5; x++ )
+				{
+					AttackMap[x][y] = 0;
+				}
+			}
+		};
+};
+
 class GameInfo
 {
 
 	public:
-		bool BlueA_Present;
-		std::string BlueA_Name;
-		bool BlueA_Local;
-		bool BlueA_AI;
-
-		bool BlueB_Present;
-		std::string BlueB_Name;
-		bool BlueB_Local;
-		bool BlueB_AI;
-
-		bool BlueC_Present;
-		std::string BlueC_Name;
-		bool BlueC_Local;
-		bool BlueC_AI;
-
-		bool RedA_Present;
-		std::string RedA_Name;
-		bool RedA_Local;
-		bool RedA_AI;
-
-		bool RedB_Present;
-		std::string RedB_Name;
-		bool RedB_Local;
-		bool RedB_AI;
-
-		bool RedC_Present;
-		std::string RedC_Name;
-		bool RedC_Local;
-		bool RedC_AI;
-
-
+		PlayerInfo* BlueTeam[3];
+		PlayerInfo* RedTeam[3];
 
 		GameInfo()
 		{
-			BlueA_Present = false;
-			BlueB_Present = false;
-			BlueC_Present = false;
-			RedA_Present = false;
-			RedB_Present = false;
-			RedC_Present = false;
+			for( int i = 0; i < 3; i++ )
+			{
+				BlueTeam[i] = nullptr;
+				RedTeam[i] = nullptr;
+			}
 
 		};
 

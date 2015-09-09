@@ -15,10 +15,11 @@ class GameLobbyStage : public Stage
 		Network* networkconnection;
 		GameInfo* currentinfo;
 		int selection;
+		bool selectionteamisblue;
 
 		void InputEvent(InputItems::ItemSet inputevent);
 		void NetworkEvent(Event* e);
-		void RenderPlayerSlot(bool BlueTeam, int Index, bool Present, std::string Name, bool Local, bool AI, int X, int Y);
+		void RenderPlayerSlot(bool BlueTeam, int Index, int X, int Y);
 
   public:
 

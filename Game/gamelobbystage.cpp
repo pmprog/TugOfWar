@@ -11,6 +11,7 @@ GameLobbyStage::GameLobbyStage()
 	networkconnection = nullptr;
 	currentinfo = new GameInfo();
 	selection = 0;
+	selectionteamisblue = true;
 }
 
 GameLobbyStage::GameLobbyStage(Network* Connection)
@@ -86,28 +87,22 @@ void GameLobbyStage::InputEvent(InputItems::ItemSet inputevent)
 	switch( inputevent )
 	{
 		case InputItems::UP:
-			if( selection > 1 )
-			{
-				selection -= 2;
-			}
-			break;
-		case InputItems::DOWN:
-			if( selection < 4 )
-			{
-				selection += 2;
-			}
-			break;
-		case InputItems::LEFT:
-			if( (selection % 2) == 1 )
+			if( selection > 0 )
 			{
 				selection--;
 			}
 			break;
-		case InputItems::RIGHT:
-			if( (selection % 2) == 0 )
+		case InputItems::DOWN:
+			if( selection < 2 )
 			{
 				selection++;
 			}
+			break;
+		case InputItems::LEFT:
+			selectionteamisblue = true;
+			break;
+		case InputItems::RIGHT:
+			selectionteamisblue = false;
 			break;
 
 		case InputItems::SELECT:
@@ -123,13 +118,42 @@ void GameLobbyStage::InputEvent(InputItems::ItemSet inputevent)
 		case InputItems::B:
 			if( networkconnection == nullptr )
 			{
-				FRAMEWORK->ProgramStages->Push( new GameLobbyAddAIStage( this ) );
+				// FRAMEWORK->ProgramStages->Push( new GameLobbyAddAIStage( this ) );
+				if( selectionteamisblue )
+				{
+					if( currentinfo->BlueTeam[selection] == nullptr )
+					{
+						currentinfo->BlueTeam[selection] = new PlayerInfo( "CPU", true, true );
+					}
+				} else {
+					if( currentinfo->RedTeam[selection] == nullptr )
+					{
+						currentinfo->RedTeam[selection] = new PlayerInfo( "CPU", true, true );
+					}
+				}
 			}
 			break;
 		case InputItems::Y:
 			if( networkconnection == nullptr || networkconnection->IsServer() )
 			{
-				FRAMEWORK->ProgramStages->Push( new GameLobbyKickStage( this ) );
+				// FRAMEWORK->ProgramStages->Push( new GameLobbyKickStage( this ) );
+				PlayerInfo* p = nullptr;
+				if( selectionteamisblue )
+				{
+					p = currentinfo->BlueTeam[selection];
+					currentinfo->BlueTeam[selection] = nullptr;
+				} else {
+					p = currentinfo->RedTeam[selection];
+					currentinfo->RedTeam[selection] = nullptr;
+				}
+
+				if( p != nullptr )
+				{
+					if( !p->Local )
+					{
+						// TODO: Send Disconnect
+					}
+				}
 			}
 			break;
 		case InputItems::START:
@@ -148,12 +172,11 @@ void GameLobbyStage::NetworkEvent(Event* e)
 	if( e->Type == EVENT_NETWORK_CONNECTION_REQUEST )
 	{
 		bool freeslot = false;
-		freeslot = ( currentinfo->BlueA_Present ? true : freeslot );
-		freeslot = ( currentinfo->BlueB_Present ? true : freeslot );
-		freeslot = ( currentinfo->BlueC_Present ? true : freeslot );
-		freeslot = ( currentinfo->RedA_Present ? true : freeslot );
-		freeslot = ( currentinfo->RedB_Present ? true : freeslot );
-		freeslot = ( currentinfo->RedC_Present ? true : freeslot );
+		for( int i = 0; i < 3; i++ )
+		{
+			freeslot = ( currentinfo->BlueTeam[i] == nullptr ? true : freeslot );
+			freeslot = ( currentinfo->RedTeam[i] == nullptr ? true : freeslot );
+		}
 		if( freeslot )
 		{
 			// TODO: Accept player and balance teams
@@ -187,16 +210,16 @@ void GameLobbyStage::Render()
 	GameResources::DrawPanel( GameResources::BluePanel, 5, 80, 13, 8, 8 );
 	optionfont->DrawString( 15, 85, "Blue Team", FontHAlign::LEFT, al_map_rgb( 255, 255, 255 ) );
 
-	RenderPlayerSlot( true, 0, currentinfo->BlueA_Present, currentinfo->BlueA_Name, currentinfo->BlueA_Local, currentinfo->BlueA_AI, 15, 140 );
-	RenderPlayerSlot( true, 2, currentinfo->BlueB_Present, currentinfo->BlueB_Name, currentinfo->BlueB_Local, currentinfo->BlueB_AI, 15, 192 );
-	RenderPlayerSlot( true, 4, currentinfo->BlueC_Present, currentinfo->BlueC_Name, currentinfo->BlueC_Local, currentinfo->BlueC_AI, 15, 244 );
+	RenderPlayerSlot( true, 0, 15, 140 );
+	RenderPlayerSlot( true, 1, 15, 192 );
+	RenderPlayerSlot( true, 2, 15, 244 );
 
 	GameResources::DrawPanel( GameResources::RedPanel, 405, 80, 13, 8, 8 );
 	optionfont->DrawString( 415, 85, "Red Team", FontHAlign::LEFT, al_map_rgb( 255, 255, 255 ) );
 
-	RenderPlayerSlot( false, 1, currentinfo->RedA_Present, currentinfo->RedA_Name, currentinfo->RedA_Local, currentinfo->RedA_AI, 415, 140 );
-	RenderPlayerSlot( false, 3, currentinfo->RedB_Present, currentinfo->RedB_Name, currentinfo->RedB_Local, currentinfo->RedB_AI, 415, 192 );
-	RenderPlayerSlot( false, 5, currentinfo->RedC_Present, currentinfo->RedC_Name, currentinfo->RedC_Local, currentinfo->RedC_AI, 415, 244 );
+	RenderPlayerSlot( false, 0, 415, 140 );
+	RenderPlayerSlot( false, 1, 415, 192 );
+	RenderPlayerSlot( false, 2, 415, 244 );
 
 	int textoff = (50 - helpfont->GetFontHeight()) / 2;
 	if( networkconnection == nullptr )
@@ -232,23 +255,30 @@ bool GameLobbyStage::IsTransition()
 	return false;
 }
 
-void GameLobbyStage::RenderPlayerSlot(bool BlueTeam, int Index, bool Present, std::string Name, bool Local, bool AI, int X, int Y)
+void GameLobbyStage::RenderPlayerSlot(bool BlueTeam, int Index, int X, int Y)
 {
-	SpriteSheet* btnimg = GameResources::WhiteButtonDown;
+	ButtonColours::Colours colour = ButtonColours::WHITE;
 	bool btnup = false;
+	PlayerInfo* p = (BlueTeam ? currentinfo->BlueTeam[Index] : currentinfo->RedTeam[Index]);
+
+	if( p != nullptr )
+	{
+		colour = (BlueTeam ? ButtonColours::BLUE : ButtonColours::RED );
+	}
 
 	if( networkconnection == nullptr || networkconnection->IsServer() )
 	{
-		if( selection == Index && currentinfo->BlueA_Present )
+		if( selection == Index && selectionteamisblue == BlueTeam )
 		{
-			btnimg = (BlueTeam ? GameResources::BlueButtonUp : GameResources::RedButtonUp);
-			btnup = true;
-		} else if( currentinfo->BlueA_Present ) {
-			btnimg = (BlueTeam ? GameResources::BlueButtonUp : GameResources::RedButtonDown);
-		} else if( selection == Index ) {
-			btnimg = GameResources::WhiteButtonUp;
+			colour = ButtonColours::YELLOW;
 			btnup = true;
 		}
 	}
-	GameResources::DrawButton( btnimg, btnup, X, Y, 23, 3 );
+	GameResources::DrawButton( colour, btnup, X, Y, 23, 3 );
+	if( p != nullptr )
+	{
+		helpfont->DrawString( X + 184, Y + 24 - (helpfont->GetFontHeight() / 2) + (!btnup ? 4 : 0), p->Name, FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+		// helpfont->DrawString( X + 184, Y + 24 - (helpfont->GetFontHeight() / 2) + (!btnup ? 4 : 0) - 2, p->Name, FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
+	}
+
 }

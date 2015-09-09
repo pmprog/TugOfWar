@@ -135,12 +135,7 @@ void* BootUp::ThreadedLoad( ALLEGRO_THREAD*, void* )
 	BitmapCache::LoadBitmap("resources/metalPanel_blueCorner.png");
 	BitmapCache::LoadBitmap("resources/metalPanel_redCorner.png");
 
-	BitmapCache::LoadBitmap("resources/buttonGrey01.png");
-	BitmapCache::LoadBitmap("resources/buttonGrey02.png");
-	BitmapCache::LoadBitmap("resources/buttonBlue01.png");
-	BitmapCache::LoadBitmap("resources/buttonBlue02.png");
-	BitmapCache::LoadBitmap("resources/buttonRed01.png");
-	BitmapCache::LoadBitmap("resources/buttonRed02.png");
+	BitmapCache::LoadBitmap("resources/buttonsCombined.png");
 
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/grass.png") );
 	GameResources::BackgroundTiles.push_back( BitmapCache::LoadBitmap("resources/sand.png") );

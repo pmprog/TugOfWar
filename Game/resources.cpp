@@ -4,33 +4,14 @@
 std::vector<ALLEGRO_BITMAP*> GameResources::BackgroundTiles;
 SpriteSheet* GameResources::BluePanel;
 SpriteSheet* GameResources::RedPanel;
-SpriteSheet* GameResources::WhiteButtonUp;
-SpriteSheet* GameResources::WhiteButtonDown;
-SpriteSheet* GameResources::BlueButtonUp;
-SpriteSheet* GameResources::BlueButtonDown;
-SpriteSheet* GameResources::RedButtonUp;
-SpriteSheet* GameResources::RedButtonDown;
+SpriteSheet* GameResources::CombinedButtons;
 
 void GameResources::InitResources()
 {
 	BluePanel = new SpriteSheet( "resources/metalPanel_blueCorner.png", 30, 30 );
 	RedPanel = new SpriteSheet( "resources/metalPanel_redCorner.png", 30, 30 );
 
-	WhiteButtonUp = new SpriteSheet( "resources/buttonGrey01.png" );
-	WhiteButtonUp->AddSprite( 0, 0, 16, 16 );
-	WhiteButtonUp->AddSprite( 16, 0, 16, 16 );
-	WhiteButtonUp->AddSprite( al_get_bitmap_width( WhiteButtonUp->GetSheet() ) - 16, 0, 16, 16 );
-	WhiteButtonUp->AddSprite( 0, 16, 16, 16 );
-	WhiteButtonUp->AddSprite( 16, 16, 16, 16 );
-	WhiteButtonUp->AddSprite( al_get_bitmap_width( WhiteButtonUp->GetSheet() ) - 16, 16, 16, 16 );
-	WhiteButtonUp->AddSprite( 0, al_get_bitmap_height( WhiteButtonUp->GetSheet() ) - 16, 16, 16 );
-	WhiteButtonUp->AddSprite( 16, al_get_bitmap_height( WhiteButtonUp->GetSheet() ) - 16, 16, 16 );
-	WhiteButtonUp->AddSprite( al_get_bitmap_width( WhiteButtonUp->GetSheet() ) - 16, al_get_bitmap_height( WhiteButtonUp->GetSheet() ) - 16, 16, 16 );
-	WhiteButtonDown = WhiteButtonUp->CloneTo( "resources/buttonGrey02.png" );
-	BlueButtonUp = WhiteButtonUp->CloneTo( "resources/buttonBlue01.png" );
-	BlueButtonDown = WhiteButtonUp->CloneTo( "resources/buttonBlue02.png" );
-	RedButtonUp = WhiteButtonUp->CloneTo( "resources/buttonRed01.png" );
-	RedButtonDown = WhiteButtonUp->CloneTo( "resources/buttonRed02.png" );
+	CombinedButtons = new SpriteSheet( "resources/buttonsCombined.png", 16, 16 );
 }
 
 void GameResources::DrawTank(int Colour, int X, int Y, Angle Rotation)
@@ -126,12 +107,8 @@ void GameResources::DrawPanel(SpriteSheet* Graphics, int X, int Y, int TilesWide
 	al_hold_bitmap_drawing( false );
 }
 
-void GameResources::DrawButton(SpriteSheet* Graphics, bool IsRaised, int X, int Y, int TilesWide, int TilesHigh)
+void GameResources::DrawButton(ButtonColours::Colours Colour, bool IsRaised, int X, int Y, int TilesWide, int TilesHigh)
 {
-  if( IsRaised )
-  {
-    Y -= 4;
-  }
 	al_hold_bitmap_drawing( true );
 	for( int y = 0; y < TilesHigh; y++ )
 	{
@@ -141,29 +118,29 @@ void GameResources::DrawButton(SpriteSheet* Graphics, bool IsRaised, int X, int 
 			{
 				if( x == 0 )
 				{
-					Graphics->DrawSprite( 0, X + (x *16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 0 + (3 * Colour) + (!IsRaised ? 36 : 0), X + (x *16), Y + (y * 16) );
 				} else if( x == TilesWide - 1) {
-					Graphics->DrawSprite( 2, X + (x * 16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 2 + (3 * Colour) + (!IsRaised ? 36 : 0), X + (x * 16), Y + (y * 16) );
 				} else {
-					Graphics->DrawSprite( 1, X + (x * 16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 1 + (3 * Colour) + (!IsRaised ? 36 : 0), X + (x * 16), Y + (y * 16) );
 				}
 			} else if( y == TilesHigh - 1 ) {
 				if( x == 0 )
 				{
-					Graphics->DrawSprite( 6, X + (x * 16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 24 + (3 * Colour) + (!IsRaised ? 24 : 0), X + (x * 16), Y + (y * 16) );
 				} else if( x == TilesWide - 1) {
-					Graphics->DrawSprite( 8, X + (x * 16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 26 + (3 * Colour) + (!IsRaised ? 24 : 0), X + (x * 16), Y + (y * 16) );
 				} else {
-					Graphics->DrawSprite( 7, X + (x * 16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 25 + (3 * Colour) + (!IsRaised ? 24 : 0), X + (x * 16), Y + (y * 16) );
 				}
 			} else {
 				if( x == 0 )
 				{
-					Graphics->DrawSprite( 3, X + (x * 16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 12 + (3 * Colour), X + (x * 16), Y + (y * 16) );
 				} else if( x == TilesWide - 1) {
-					Graphics->DrawSprite( 5, X + (x * 16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 14 + (3 * Colour), X + (x * 16), Y + (y * 16) );
 				} else {
-					Graphics->DrawSprite( 4, X + (x * 16), Y + (y * 16) );
+					CombinedButtons->DrawSprite( 13 + (3 * Colour), X + (x * 16), Y + (y * 16) );
 				}
 			}
 		}
