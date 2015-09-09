@@ -1,28 +1,31 @@
 
-#include "gamelobby_kick.h"
+#include "gameturn_player.h"
 
-GameLobbyKickStage::GameLobbyKickStage( GameLobbyStage* Owner )
+GameTurnPlayerStage::GameTurnPlayerStage( GameStage* Owner, PlayerInfo* Player )
 {
-	lobby = Owner;
+	currentgame = Owner;
+	currentplayer = Player;
+	GenerateBackground();
 }
 
-void GameLobbyKickStage::Begin()
+void GameTurnPlayerStage::Begin()
 {
+	optionfont = FontCache::LoadFont( "resources/armalite.ttf", 32 );
 }
 
-void GameLobbyKickStage::Pause()
-{
-}
-
-void GameLobbyKickStage::Resume()
-{
-}
-
-void GameLobbyKickStage::Finish()
+void GameTurnPlayerStage::Pause()
 {
 }
 
-void GameLobbyKickStage::EventOccurred(Event *e)
+void GameTurnPlayerStage::Resume()
+{
+}
+
+void GameTurnPlayerStage::Finish()
+{
+}
+
+void GameTurnPlayerStage::EventOccurred(Event *e)
 {
 	if( e->Type == EVENT_KEY_DOWN )
 	{
@@ -34,17 +37,47 @@ void GameLobbyKickStage::EventOccurred(Event *e)
 	}
 }
 
-void GameLobbyKickStage::Update()
+void GameTurnPlayerStage::Update()
 {
 }
 
-void GameLobbyKickStage::Render()
+void GameTurnPlayerStage::Render()
 {
-	lobby->Render();
-	al_draw_filled_rectangle( 0, 0, DISPLAY->GetWidth(), DISPLAY->GetHeight(), al_map_rgba( 0, 0, 0, 128 ) );
+	al_draw_bitmap( background, 0, 0, 0 );
 }
 
-bool GameLobbyKickStage::IsTransition()
+bool GameTurnPlayerStage::IsTransition()
 {
 	return false;
+}
+
+void GameTurnPlayerStage::GenerateBackground()
+{
+	int backgroundindex = rand() % 3;
+
+	if( background == nullptr )
+    {
+        background = al_create_bitmap( 1024, 512 );
+    }
+	DISPLAY->SetTarget( background );
+
+	int iw = al_get_bitmap_width( GameResources::BackgroundTiles.at(backgroundindex) );
+	int ih = al_get_bitmap_height( GameResources::BackgroundTiles.at(backgroundindex) );
+	int bx = 0;
+	int by = 0;
+
+	al_hold_bitmap_drawing( true );
+	while( by < 512 )
+	{
+		while( bx < 1024 )
+		{
+			al_draw_bitmap( GameResources::BackgroundTiles.at(backgroundindex), bx, by, 0 );
+			bx += iw;
+		}
+		by += ih;
+		bx = 0;
+	}
+	al_hold_bitmap_drawing( false );
+
+	DISPLAY->ClearTarget();
 }

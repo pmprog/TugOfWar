@@ -9,6 +9,10 @@ class GameTurnPlayerStage : public Stage
 	private:
 		TTFFont* optionfont;
 		GameStage* currentgame;
+		PlayerInfo* currentplayer;
+		ALLEGRO_BITMAP* background;
+
+		void GenerateBackground();
 
   public:
 		GameTurnPlayerStage( GameStage* Owner, PlayerInfo* Player );

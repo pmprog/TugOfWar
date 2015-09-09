@@ -9,6 +9,13 @@ class GameTurnAIStage : public Stage
 	private:
 		TTFFont* optionfont;
 		GameStage* currentgame;
+		PlayerInfo* currentplayer;
+
+		int currentturntime;
+		bool turnfinished;
+
+		ALLEGRO_THREAD* aithread;
+		static void* ProcessAI(ALLEGRO_THREAD *thread, void *arg);
 
   public:
 		GameTurnAIStage( GameStage* Owner, PlayerInfo* Player );
@@ -22,4 +29,8 @@ class GameTurnAIStage : public Stage
     virtual void Update();
     virtual void Render();
 		virtual bool IsTransition();
+
+		GameStage* GetGame();
+		PlayerInfo* GetPlayer();
+		void CompleteTurn();
 };

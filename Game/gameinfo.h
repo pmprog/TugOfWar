@@ -3,12 +3,17 @@
 
 #include <string>
 
+class GameInfo;
+
 class PlayerInfo
 {
 	public:
 		std::string Name;
 		bool Local;
 		bool AI;
+		bool BlueTeam;
+		int TeamIndex;
+		GameInfo* GameData;
 
 		int Money;
 		float IntrestRate;
@@ -42,11 +47,15 @@ class GameInfo
 {
 
 	public:
+		int BlueLife;
 		PlayerInfo* BlueTeam[3];
+		int RedLife;
 		PlayerInfo* RedTeam[3];
 
 		GameInfo()
 		{
+			BlueLife = 100;
+			RedLife = 100;
 			for( int i = 0; i < 3; i++ )
 			{
 				BlueTeam[i] = nullptr;

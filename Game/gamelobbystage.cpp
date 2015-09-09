@@ -125,31 +125,41 @@ void GameLobbyStage::InputEvent(InputItems::ItemSet inputevent)
 					}
 					p = currentinfo->RedTeam[selection];
 				}
+				p->BlueTeam = selectionteamisblue;
+				p->TeamIndex = selection;
+				p->GameData = currentinfo;
 				FRAMEWORK->ProgramStages->Push( new GameLobbyAddLocalStage( p ) );
 			}
 			break;
 		case InputItems::B:
 			if( networkconnection == nullptr )
 			{
-				// FRAMEWORK->ProgramStages->Push( new GameLobbyAddAIStage( this ) );
+				PlayerInfo* p = nullptr;
 				if( selectionteamisblue )
 				{
 					if( currentinfo->BlueTeam[selection] == nullptr )
 					{
-						currentinfo->BlueTeam[selection] = new PlayerInfo( "CPU", true, true );
+						p = new PlayerInfo( "CPU", true, true );
+						currentinfo->BlueTeam[selection] = p;
 					}
 				} else {
 					if( currentinfo->RedTeam[selection] == nullptr )
 					{
-						currentinfo->RedTeam[selection] = new PlayerInfo( "CPU", true, true );
+						p = new PlayerInfo( "CPU", true, true );
+						currentinfo->RedTeam[selection] = p;
 					}
+				}
+				if( p != nullptr )
+				{
+					p->BlueTeam = selectionteamisblue;
+					p->TeamIndex = selection;
+					p->GameData = currentinfo;
 				}
 			}
 			break;
 		case InputItems::Y:
 			if( networkconnection == nullptr || networkconnection->IsServer() )
 			{
-				// FRAMEWORK->ProgramStages->Push( new GameLobbyKickStage( this ) );
 				PlayerInfo* p = nullptr;
 				if( selectionteamisblue )
 				{
@@ -164,8 +174,9 @@ void GameLobbyStage::InputEvent(InputItems::ItemSet inputevent)
 				{
 					if( !p->Local )
 					{
-						// TODO: Send Disconnect
+						// TODO: Disconnect
 					}
+					delete p;
 				}
 			}
 			break;

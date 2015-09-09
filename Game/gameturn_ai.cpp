@@ -1,50 +1,93 @@
 
-#include "gamelobby_addai.h"
+#include "gameturn_ai.h"
 
-GameLobbyAddAIStage::GameLobbyAddAIStage( GameLobbyStage* Owner )
+GameTurnAIStage::GameTurnAIStage( GameStage* Owner, PlayerInfo* Player )
 {
-	lobby = Owner;
+	currentgame = Owner;
+	currentplayer = Player;
+	optionfont = FontCache::LoadFont( "resources/armalite.ttf", 32 );
+	aithread = nullptr;
 }
 
-void GameLobbyAddAIStage::Begin()
+void GameTurnAIStage::Begin()
+{
+	currentturntime = 0;
+	turnfinished = false;
+
+	aithread = al_create_thread( ProcessAI, (void*)this );
+	al_start_thread( aithread );
+}
+
+void GameTurnAIStage::Pause()
 {
 }
 
-void GameLobbyAddAIStage::Pause()
+void GameTurnAIStage::Resume()
 {
 }
 
-void GameLobbyAddAIStage::Resume()
+void GameTurnAIStage::Finish()
 {
-}
-
-void GameLobbyAddAIStage::Finish()
-{
-}
-
-void GameLobbyAddAIStage::EventOccurred(Event *e)
-{
-	if( e->Type == EVENT_KEY_DOWN )
+	if( !turnfinished )
 	{
-		if( e->Data.Keyboard.KeyCode == ALLEGRO_KEY_ESCAPE )
-		{
-			delete FRAMEWORK->ProgramStages->Pop();
-			return;
-		}
+		al_set_thread_should_stop( aithread );
 	}
 }
 
-void GameLobbyAddAIStage::Update()
+void GameTurnAIStage::EventOccurred(Event *e)
 {
 }
 
-void GameLobbyAddAIStage::Render()
+void GameTurnAIStage::Update()
 {
-	lobby->Render();
+	currentturntime++;
+	// Turn can't be more than 5 seconds, but keep alive for at least 1 second
+	if( (currentturntime > FRAMEWORK->GetFramesPerSecond() && turnfinished) || currentturntime >= (FRAMEWORK->GetFramesPerSecond() * 5) )
+	{
+		delete FRAMEWORK->ProgramStages->Pop();
+	}
+}
+
+void GameTurnAIStage::Render()
+{
+	currentgame->Render();
 	al_draw_filled_rectangle( 0, 0, DISPLAY->GetWidth(), DISPLAY->GetHeight(), al_map_rgba( 0, 0, 0, 128 ) );
+
+	optionfont->DrawString( 404, 284 - (optionfont->GetFontHeight() / 2), currentplayer->Name + " is thinking...", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( 400, 280 - (optionfont->GetFontHeight() / 2), currentplayer->Name + " is thinking...", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
 }
 
-bool GameLobbyAddAIStage::IsTransition()
+bool GameTurnAIStage::IsTransition()
 {
 	return false;
+}
+
+GameStage* GameTurnAIStage::GetGame()
+{
+	return currentgame;
+}
+
+PlayerInfo* GameTurnAIStage::GetPlayer()
+{
+	return currentplayer;
+}
+
+void GameTurnAIStage::CompleteTurn()
+{
+	turnfinished = true;
+}
+
+void* GameTurnAIStage::ProcessAI(ALLEGRO_THREAD *thread, void *arg)
+{
+	GameTurnAIStage* aiplayer = (GameTurnAIStage*)arg;
+
+	// Abort
+	if( al_get_thread_should_stop(thread) )
+	{
+		aiplayer->CompleteTurn();
+		return nullptr;
+	}
+
+	aiplayer->CompleteTurn();
+	return nullptr;
 }
