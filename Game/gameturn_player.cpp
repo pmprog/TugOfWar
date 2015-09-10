@@ -12,6 +12,7 @@ GameTurnPlayerStage::GameTurnPlayerStage( GameStage* Owner, PlayerInfo* Player )
 void GameTurnPlayerStage::Begin()
 {
 	optionfont = FontCache::LoadFont( "resources/armalite.ttf", 32 );
+	buttonfont = FontCache::LoadFont( "resources/armalite.ttf", 16 );
 	playeracknowledgedturn = false;
 	selectinggrid = false;
 	gridx = 0;
@@ -65,6 +66,7 @@ void GameTurnPlayerStage::EventOccurred(Event *e)
 			case InputItems::UP:
 				if( selectinggrid )
 				{
+					gridy = (gridy > 0 ? gridy - 1 : 0);
 				} else {
 					selectionmenu = ( selectionmenu > 0 ? selectionmenu - 1 : 0 );
 				}
@@ -72,6 +74,7 @@ void GameTurnPlayerStage::EventOccurred(Event *e)
 			case InputItems::DOWN:
 				if( selectinggrid )
 				{
+					gridy = (gridy < 4 ? gridy + 1 : 4);
 				} else {
 					selectionmenu = ( selectionmenu < 5 ? selectionmenu + 1 : 5 );
 				}
@@ -79,11 +82,13 @@ void GameTurnPlayerStage::EventOccurred(Event *e)
 			case InputItems::LEFT:
 				if( selectinggrid )
 				{
+					gridx = (gridx > 0 ? gridx - 1 : 0);
 				}
 				break;
 			case InputItems::RIGHT:
 				if( selectinggrid )
 				{
+					gridx = (gridx < 3 ? gridx + 1 : 3);
 				}
 				break;
 			case InputItems::X:
@@ -93,9 +98,55 @@ void GameTurnPlayerStage::EventOccurred(Event *e)
 				if( selectinggrid )
 				{
 					// Perform action
+					switch( selectionmenu )
+					{
+						case 0:	// Buy Red
+						case 1:	// Buy Green
+						case 2:	// Buy Blue
+							if( currentplayer->Money >= currentplayer->GameData->TankCost && (currentplayer->AttackMap[gridx][gridy] < 0 || currentplayer->AttackMap[gridx][gridy] > 2) )
+							{
+								currentplayer->AttackMap[gridx][gridy] = selectionmenu;
+								currentplayer->Money -= currentplayer->GameData->TankCost;
+								currentplayer->TurnData.back()->TurnData.push_back( new TurnInfo( (TurnInfo::Actions)selectionmenu, gridx, gridy ) );
+							}
+							break;
+						case 4:	// Sell
+							if( currentplayer->AttackMap[gridx][gridy] >= 0 && currentplayer->AttackMap[gridx][gridy] < 3 )
+							{
+								currentplayer->AttackMap[gridx][gridy] = -1;
+								currentplayer->Money += currentplayer->GameData->TankSell;
+								currentplayer->TurnData.back()->TurnData.push_back( new TurnInfo( TurnInfo::Actions::SELL_TANK, gridx, gridy ) );
+							}
+							break;
+					}
 					selectinggrid = false;
 				} else {
 					// Handle menu
+					switch( selectionmenu )
+					{
+						case 0:	// Buy Red
+						case 1:	// Buy Green
+						case 2:	// Buy Blue
+							if( currentplayer->Money >= currentplayer->GameData->TankCost )
+							{
+								selectinggrid = true;
+							}
+							break;
+						case 4:	// Sell
+							selectinggrid = true;
+							break;
+						case 3:	// Buy Interest
+							if( currentplayer->Money >= currentplayer->GameData->InterestCost )
+							{
+								currentplayer->Money -= currentplayer->GameData->InterestCost;
+								currentplayer->InterestRate += 0.05f;
+							}
+							break;
+						case 5:	// Finish
+							currentplayer->TurnData.back()->TurnData.push_back( new TurnInfo( TurnInfo::Actions::NONE ) );
+							delete FRAMEWORK->ProgramStages->Pop();
+							break;
+					}
 				}
 				break;
 
@@ -126,6 +177,13 @@ void GameTurnPlayerStage::Render()
 		al_draw_bitmap( background, 0, 0, 0 );
 
 		int drawx = ( currentplayer->BlueTeam ? 15 : 90 );
+
+		if( selectinggrid )
+		{
+			al_draw_filled_rectangle( drawx + (gridx * 90), 15 + (gridy * 90), drawx + ((gridx + 1) * 90) - 1, 15 + ((gridy + 1) * 90) - 1, al_map_rgb( 255, 255, 0 ) );
+		}
+
+
 		for( int x = 0; x < 5; x++ )
 		{
 			al_draw_line( drawx + (x * 90), 15, drawx + (x * 90), 465, al_map_rgb( 255, 255, 255 ), 3 );
@@ -142,13 +200,23 @@ void GameTurnPlayerStage::Render()
 			}
 		}
 
+		for( int x = 0; x < 4; x++ )
+		{
+			for( int y = 0; y < 5; y++ )
+			{
+				GameResources::DrawTank( currentplayer->AttackMap[x][y], drawx + (x * 90) + 45, 15 + (y * 90) + 45, Angle(90.0f) );
+			}
+		}
+
+
+
 		GameResources::DrawPanel( (currentplayer->BlueTeam ? GameResources::BluePanel : GameResources::RedPanel ), 480, 10, 10, 5, 6 );
 
 		int btny = 180;
 		RenderMenuButton( 0, btny, "Buy Red Tank (Defeats Green)" ); btny += 49;
 		RenderMenuButton( 1, btny, "Buy Green Tank (Defeats Blue)" ); btny += 49;
 		RenderMenuButton( 2, btny, "Buy Blue Tank (Defeats Red)" ); btny += 49;
-		RenderMenuButton( 3, btny, "Buy Intrest (+5%)" ); btny += 49;
+		RenderMenuButton( 3, btny, "Buy 5pc Interest" ); btny += 49;
 		RenderMenuButton( 4, btny, "Sell Tank" ); btny += 49;
 		RenderMenuButton( 5, btny, "Finish" ); btny += 49;
 
@@ -194,6 +262,6 @@ void GameTurnPlayerStage::RenderMenuButton( int Index, int Y, std::string Label 
 	btnc = ( selectionmenu == Index ? ButtonColours::YELLOW : btnc );
 
 	GameResources::DrawButton( btnc, (selectionmenu == Index), 483, Y, 18, 3 );
-	optionfont->DrawString( 629, Y + 10 - (selectionmenu == Index ? 4 : 0 ), Label, FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
-	optionfont->DrawString( 627, Y + 8 - (selectionmenu == Index ? 4 : 0 ), Label, FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
+	buttonfont->DrawString( 627, Y + 12 - (selectionmenu == Index ? 4 : 0 ), Label, FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	//buttonfont->DrawString( 627, Y + 8 - (selectionmenu == Index ? 4 : 0 ), Label, FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
 }

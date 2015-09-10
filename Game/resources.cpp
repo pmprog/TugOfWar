@@ -29,6 +29,8 @@ void GameResources::DrawTank(int Colour, int X, int Y, Angle Rotation)
     case 2:
       t = BitmapCache::LoadBitmap("resources/tankBlue.png");
       break;
+		default:
+			return;
   }
   if( Rotation.ToDegrees() == 0 )
   {

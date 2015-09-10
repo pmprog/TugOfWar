@@ -8,6 +8,7 @@ class GameTurnPlayerStage : public Stage
 
 	private:
 		TTFFont* optionfont;
+		TTFFont* buttonfont;
 		GameStage* currentgame;
 		PlayerInfo* currentplayer;
 		ALLEGRO_BITMAP* background;
