@@ -15,13 +15,33 @@ class TurnInfo
 			BUY_GREEN_TANK,
 			BUY_BLUE_TANK,
 			SELL_TANK,
-			BUY_INTEREST
+			BUY_INTEREST,
 		};
 
 		Actions Action;
 		int GridX;
 		int GridY;
 
+		TurnInfo( Actions Act )
+		{
+			Action = Act;
+			GridX = 0;
+			GridY = 0;
+		};
+
+		TurnInfo( Actions Act, int X, int Y )
+		{
+			Action = Act;
+			GridX = X;
+			GridY = Y;
+		};
+
+};
+
+class PlayerTurnInfo
+{
+	public:
+		std::vector<TurnInfo*> TurnData;
 };
 
 class PlayerInfo
@@ -37,10 +57,10 @@ class PlayerInfo
 		int Money;
 		float InterestRate;
 		int DelayInterest;
-		int AttackMap[5][5];
+		int AttackMap[4][5];
 		int CurrentTier;
 
-		std::vector<std::vector<TurnInfo*>> TurnData;
+		std::vector<PlayerTurnInfo*> TurnData;
 
 		PlayerInfo(std::string PlayerName, bool IsLocal, bool IsAI)
 		{
@@ -56,7 +76,7 @@ class PlayerInfo
 
 			for( int y = 0; y < 5; y++ )
 			{
-				for( int x = 0; x < 5; x++ )
+				for( int x = 0; x < 4; x++ )
 				{
 					AttackMap[x][y] = 0;
 				}
@@ -99,12 +119,13 @@ class GameInfo
 			{
 				BlueCurrent = (BlueCurrent + 1) % 3;
 			} while( BlueTeam[BlueCurrent] == nullptr );
+			BlueTeam[BlueCurrent]->TurnData.push_back( new PlayerTurnInfo() );
 
 			do
 			{
 				RedCurrent = (RedCurrent + 1) % 3;
 			} while( RedTeam[RedCurrent] == nullptr );
-
+			RedTeam[RedCurrent]->TurnData.push_back( new PlayerTurnInfo() );
 		};
 
 };

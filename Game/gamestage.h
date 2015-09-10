@@ -11,6 +11,8 @@ class GameStage : public Stage
 	private:
 		GameInfo* currentgame;
 		ALLEGRO_BITMAP* background;
+		bool performbattle;
+		int battlecountdown;
 
 		void GenerateBackground();
 

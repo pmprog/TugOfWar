@@ -12,8 +12,14 @@ class GameTurnPlayerStage : public Stage
 		PlayerInfo* currentplayer;
 		ALLEGRO_BITMAP* background;
 		bool playeracknowledgedturn;
+		bool selectinggrid;
+		int gridx;
+		int gridy;
+
+		int selectionmenu;
 
 		void GenerateBackground();
+		void RenderMenuButton( int Index, int Y, std::string Label );
 
   public:
 		GameTurnPlayerStage( GameStage* Owner, PlayerInfo* Player );

@@ -89,6 +89,8 @@ void* GameTurnAIStage::ProcessAI(ALLEGRO_THREAD *thread, void *arg)
 		return nullptr;
 	}
 
+	aiplayer->GetPlayer()->TurnData.back()->TurnData.push_back( new TurnInfo( TurnInfo::Actions::NONE ) );
+
 	aiplayer->CompleteTurn();
 	return nullptr;
 }

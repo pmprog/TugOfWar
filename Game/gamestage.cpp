@@ -1,10 +1,13 @@
 
 #include "gamestage.h"
+#include "gameturn_player.h"
+#include "gameturn_ai.h"
 
 GameStage::GameStage(GameInfo* Game)
 {
 	currentgame = Game;
 	background = nullptr;
+	performbattle = false;
 	GenerateBackground();
 	// Set to first players
 	currentgame->NextTurn();
@@ -54,11 +57,56 @@ void GameStage::EventOccurred(Event *e)
 void GameStage::Update()
 {
 
-	if( currentgame->AmHost )
+	if( performbattle )
 	{
-		// Drive from here
 
-		if( currentgame->BlueTeam[currentgame->BlueCurrent]->TurnData.size()  )
+		if( battlecountdown > 0 )
+		{
+			battlecountdown--;
+		} else {
+			performbattle = false;
+			currentgame->NextTurn();
+		}
+
+	} else if( currentgame->AmHost ) {
+		// Drive from here
+		PlayerInfo* blue = currentgame->BlueTeam[currentgame->BlueCurrent];
+		PlayerInfo* red = currentgame->RedTeam[currentgame->RedCurrent];
+
+		if( blue->Local && blue->TurnData.back()->TurnData.size() == 0 )
+		{
+			if( !blue->AI )
+			{
+				FRAMEWORK->ProgramStages->Push( new GameTurnPlayerStage( this, blue ) );
+			} else {
+				FRAMEWORK->ProgramStages->Push( new GameTurnAIStage( this, blue ) );
+			}
+			return;
+		}
+
+		if( red->Local && red->TurnData.back()->TurnData.size() == 0 )
+		{
+			if( !red->AI )
+			{
+				FRAMEWORK->ProgramStages->Push( new GameTurnPlayerStage( this, red ) );
+			} else {
+				FRAMEWORK->ProgramStages->Push( new GameTurnAIStage( this, red ) );
+			}
+			return;
+		}
+
+		if( blue->TurnData.back()->TurnData.size() == 0 )
+		{
+			// TODO: Push Network Wait
+		}
+
+		if( red->TurnData.back()->TurnData.size() == 0 )
+		{
+			// TODO: Push Network Wait
+		}
+
+		performbattle = true;
+		battlecountdown = 300;
 
 	} else {
 		// Check last packet, if not heard anything for a while, ping and check
@@ -85,10 +133,7 @@ void GameStage::GenerateBackground()
 {
 	int backgroundindex = rand() % 3;
 
-	if( background == nullptr )
-    {
-        background = al_create_bitmap( 1024, 512 );
-    }
+  background = al_create_bitmap( 1024, 512 );
 	DISPLAY->SetTarget( background );
 
 	int iw = al_get_bitmap_width( GameResources::BackgroundTiles.at(backgroundindex) );
