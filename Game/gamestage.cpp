@@ -39,10 +39,30 @@ void GameStage::EventOccurred(Event *e)
 			return;
 		}
 	}
+
+	if( e->Type == EVENT_NETWORK_PACKET_RECEIVED )
+	{
+		if( currentgame->AmHost )
+		{
+			// Process and distribute
+		} else {
+			// Drive from here
+		}
+	}
 }
 
 void GameStage::Update()
 {
+
+	if( currentgame->AmHost )
+	{
+		// Drive from here
+
+		if( currentgame->BlueTeam[currentgame->BlueCurrent]->TurnData.size()  )
+
+	} else {
+		// Check last packet, if not heard anything for a while, ping and check
+	}
 }
 
 void GameStage::Render()
