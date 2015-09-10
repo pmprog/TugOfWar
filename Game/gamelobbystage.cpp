@@ -3,11 +3,12 @@
 #include "menu.h"
 #include "input.h"
 #include "gamelobby_addlocal.h"
+#include "gamestage.h"
 
 GameLobbyStage::GameLobbyStage()
 {
 	networkconnection = nullptr;
-	currentinfo = new GameInfo();
+	currentinfo = new GameInfo( true );
 	selection = 0;
 	selectionteamisblue = true;
 }
@@ -16,7 +17,7 @@ GameLobbyStage::GameLobbyStage(Network* Connection)
 {
 	selection = 0;
 	networkconnection = Connection;
-	currentinfo = new GameInfo();
+	currentinfo = new GameInfo( Connection->IsServer() );
 
 	if( !Connection->IsServer() )
 	{
@@ -184,7 +185,8 @@ void GameLobbyStage::InputEvent(InputItems::ItemSet inputevent)
 
 			if( networkconnection == nullptr || networkconnection->IsServer() )
 			{
-				//FRAMEWORK->ProgramStages->Push( new GameStage( this ) );
+				// TODO: Tell clients to start the game
+				FRAMEWORK->ProgramStages->Push( new GameStage( currentinfo ) );
 			}
 			break;
 

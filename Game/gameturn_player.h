@@ -11,6 +11,7 @@ class GameTurnPlayerStage : public Stage
 		GameStage* currentgame;
 		PlayerInfo* currentplayer;
 		ALLEGRO_BITMAP* background;
+		bool playeracknowledgedturn;
 
 		void GenerateBackground();
 

@@ -9,9 +9,15 @@ class GameStage : public Stage
 {
 
 	private:
+		GameInfo* currentgame;
+		ALLEGRO_BITMAP* background;
 
+		void GenerateBackground();
 
   public:
+		GameStage(GameInfo* Game);
+
+
     // Stage control
     virtual void Begin();
     virtual void Pause();
