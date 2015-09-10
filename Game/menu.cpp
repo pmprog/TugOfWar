@@ -46,7 +46,7 @@ void Menu::EventOccurred(Event *e)
 	{
 		if( e->Data.Keyboard.KeyCode == ALLEGRO_KEY_ESCAPE )
 		{
-			FRAMEWORK->ProgramStages->Push( new TransitionTiled( TiledTransitions::SPIRAL_INWARDS, 9, 9 ) );
+			FRAMEWORK->ProgramStages->Push( new TransitionTiled( TiledTransitions::SPIRAL_INWARDS, 7, 7 ) );
 			return;
 		}
 
@@ -85,7 +85,7 @@ void Menu::EventOccurred(Event *e)
 					break;
 				case 4:
 					// Quit
-					FRAMEWORK->ProgramStages->Push( new TransitionTiled( TiledTransitions::SPIRAL_INWARDS, 9, 9 ) );
+					FRAMEWORK->ProgramStages->Push( new TransitionTiled( TiledTransitions::SPIRAL_INWARDS, 7, 7 ) );
 					break;
 			}
       return;
