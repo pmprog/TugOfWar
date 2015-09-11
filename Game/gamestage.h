@@ -5,6 +5,16 @@
 #include "resources.h"
 #include "gameinfo.h"
 
+class GameTankInfo
+{
+  public:
+    int Colour;
+    int X;
+    int Y;
+    bool BlueTeam;
+    bool Dead;
+};
+
 class GameStage : public Stage
 {
 
@@ -13,6 +23,9 @@ class GameStage : public Stage
 		ALLEGRO_BITMAP* background;
 		bool performbattle;
 		int battlecountdown;
+		TTFFont* textfont;
+
+		std::vector<GameTankInfo*> battletanks;
 
 		void GenerateBackground();
 

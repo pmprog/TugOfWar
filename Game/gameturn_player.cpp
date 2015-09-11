@@ -1,6 +1,7 @@
 
 #include "gameturn_player.h"
 #include "input.h"
+#include "../Framework/Primitives/strings.h"
 
 GameTurnPlayerStage::GameTurnPlayerStage( GameStage* Owner, PlayerInfo* Player )
 {
@@ -139,7 +140,7 @@ void GameTurnPlayerStage::EventOccurred(Event *e)
 							if( currentplayer->Money >= currentplayer->GameData->InterestCost )
 							{
 								currentplayer->Money -= currentplayer->GameData->InterestCost;
-								currentplayer->InterestRate += 0.05f;
+								currentplayer->InterestRate += currentplayer->GameData->InterestIncrease;
 							}
 							break;
 						case 5:	// Finish
@@ -208,9 +209,9 @@ void GameTurnPlayerStage::Render()
 			}
 		}
 
-
-
 		GameResources::DrawPanel( (currentplayer->BlueTeam ? GameResources::BluePanel : GameResources::RedPanel ), 480, 10, 10, 5, 6 );
+		optionfont->DrawString( 486, 14, currentplayer->Name, FontHAlign::LEFT, al_map_rgb( 0, 0, 0 ) );
+		buttonfont->DrawString( 486, 46, "Money: " + Strings::FromNumber( currentplayer->Money ), FontHAlign::LEFT, al_map_rgb( 0, 0, 0 ) );
 
 		int btny = 180;
 		RenderMenuButton( 0, btny, "Buy Red Tank (Defeats Green)" ); btny += 49;

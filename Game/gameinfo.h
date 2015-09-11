@@ -69,7 +69,7 @@ class PlayerInfo
 			AI = IsAI;
 
 			// Start with 100c, intrest rate of 10%, and a tiering of 1 (in case I put tank tiers in)
-			Money = 20;
+			Money = 200;
 			InterestRate = 0.10f;
 			DelayInterest = 0;
 			CurrentTier = 1;
@@ -90,9 +90,12 @@ class GameInfo
 	public:
 		bool AmHost;
 
-		int TankCost = 5;
-		int TankSell = 3;
-		int InterestCost = 4;
+    int StartingLife = 30;
+    int TurnIncome = 15;
+		int TankCost = 50;
+		int TankSell = 30;
+		int InterestCost = 40;
+		float InterestIncrease = 0.1f;
 
 		int BlueLife;
 		PlayerInfo* BlueTeam[3];
@@ -105,8 +108,8 @@ class GameInfo
 		GameInfo(bool Host)
 		{
 			AmHost = Host;
-			BlueLife = 30;
-			RedLife = 30;
+			BlueLife = StartingLife;
+			RedLife = StartingLife;
 			BlueCurrent = 2;
 			RedCurrent = 2;
 			for( int i = 0; i < 3; i++ )
@@ -119,19 +122,37 @@ class GameInfo
 
 		void NextTurn()
 		{
+		  float bonus;
 			do
 			{
 				BlueCurrent = (BlueCurrent + 1) % 3;
 			} while( BlueTeam[BlueCurrent] == nullptr );
 			BlueTeam[BlueCurrent]->TurnData.push_back( new PlayerTurnInfo() );
-			BlueTeam[BlueCurrent]->Money *= (1.0f + BlueTeam[BlueCurrent]->InterestRate);
+
+			// Add turn income, then add interest bonus
+			BlueTeam[BlueCurrent]->Money += TurnIncome;
+			bonus = BlueTeam[BlueCurrent]->Money * BlueTeam[BlueCurrent]->InterestRate;
+			if( bonus < 1.0f )
+      {
+        bonus = 1.0f;
+      }
+			BlueTeam[BlueCurrent]->Money += (int)bonus;
 
 			do
 			{
 				RedCurrent = (RedCurrent + 1) % 3;
 			} while( RedTeam[RedCurrent] == nullptr );
 			RedTeam[RedCurrent]->TurnData.push_back( new PlayerTurnInfo() );
-			RedTeam[RedCurrent]->Money *= (1.0f + RedTeam[RedCurrent]->InterestRate);
+
+			// Add turn income, then add interest bonus
+			RedTeam[RedCurrent]->Money += TurnIncome;
+			bonus = RedTeam[RedCurrent]->Money * RedTeam[RedCurrent]->InterestRate;
+			if( bonus < 1.0f )
+      {
+        bonus = 1.0f;
+      }
+			RedTeam[RedCurrent]->Money += (int)bonus;
+
 		};
 
 };

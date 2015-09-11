@@ -2,6 +2,7 @@
 #include "gamestage.h"
 #include "gameturn_player.h"
 #include "gameturn_ai.h"
+#include "../Framework/Primitives/strings.h"
 
 GameStage::GameStage(GameInfo* Game)
 {
@@ -9,6 +10,7 @@ GameStage::GameStage(GameInfo* Game)
 	background = nullptr;
 	performbattle = false;
 	GenerateBackground();
+	textfont = FontCache::LoadFont( "resources/armalite.ttf", 32 );
 	// Set to first players
 	currentgame->NextTurn();
 }
@@ -60,9 +62,21 @@ void GameStage::Update()
 	if( performbattle )
 	{
 
-		if( battlecountdown > 0 )
+		if( battletanks.size() > 0 )
 		{
 			battlecountdown--;
+
+			for( int idx = 0; idx < battletanks.size(); idx++ )
+      {
+        GameTankInfo* t = battletanks.at( idx );
+        // Already processed
+        if( !t->Dead )
+        {
+          t->X += ( t->BlueTeam ? 10 : -10 );
+        }
+      }
+
+
 		} else {
 			performbattle = false;
 			currentgame->NextTurn();
@@ -107,6 +121,32 @@ void GameStage::Update()
 
 		performbattle = true;
 		battlecountdown = 300;
+		for( int y = 0; y < 5; y++ )
+    {
+      for( int x = 0; x < 4; x++ )
+      {
+        if( blue->AttackMap[x][y] >= 0 && blue->AttackMap[x][y] < 3 )
+        {
+          GameTankInfo* ti = new GameTankInfo();
+          ti->Colour = blue->AttackMap[x][y];
+          ti->BlueTeam = true;
+          ti->X = (x * -90) - 45;
+          ti->Y = 45 + (y * 90);
+          ti->Dead = false;
+          battletanks.push_back( ti );
+        }
+        if( red->AttackMap[x][y] >= 0 && red->AttackMap[x][y] < 3 )
+        {
+          GameTankInfo* ti = new GameTankInfo();
+          ti->Colour = red->AttackMap[x][y];
+          ti->BlueTeam = false;
+          ti->X = 845 + (x * 90);
+          ti->Y = 45 + (y * 90);
+          ti->Dead = false;
+          battletanks.push_back( ti );
+        }
+      }
+    }
 
 	} else {
 		// Check last packet, if not heard anything for a while, ping and check
@@ -118,9 +158,23 @@ void GameStage::Render()
 	al_draw_bitmap( background, 0, 0, 0 );
 
 	// Draw Blue Team's Health
-	al_draw_filled_rectangle( 0, 450, 400, 480, al_map_rgb( 30, 167, 225 ) );
+	al_draw_filled_rectangle( 0, 450, (int)((400.0f / (float)currentgame->StartingLife) * (float)currentgame->BlueLife), 480, al_map_rgb( 30, 167, 225 ) );
+	textfont->DrawString( 6, 480 - textfont->GetFontHeight(), "Blue Team: " + Strings::FromNumber( currentgame->BlueLife ), FontHAlign::LEFT, al_map_rgb( 0, 0, 0 ) );
+	textfont->DrawString( 4, 478 - textfont->GetFontHeight(), "Blue Team: " + Strings::FromNumber( currentgame->BlueLife ), FontHAlign::LEFT, al_map_rgb( 255, 255, 255 ) );
 	// Draw Red Team's Health
-	al_draw_filled_rectangle( 400, 450, 800, 480, al_map_rgb( 232, 106, 23 ) );
+	al_draw_filled_rectangle( 800 - (int)((400.0f / (float)currentgame->StartingLife) * (float)currentgame->RedLife), 450, 800, 480, al_map_rgb( 232, 106, 23 ) );
+	textfont->DrawString( 794, 480 - textfont->GetFontHeight(), "Red Team: " + Strings::FromNumber( currentgame->RedLife ), FontHAlign::RIGHT, al_map_rgb( 0, 0, 0 ) );
+	textfont->DrawString( 796, 478 - textfont->GetFontHeight(), "Red Team: " + Strings::FromNumber( currentgame->RedLife ), FontHAlign::RIGHT, al_map_rgb( 255, 255, 255 ) );
+
+  for( int idx = 0; idx < battletanks.size(); idx++ )
+  {
+    GameTankInfo* t = battletanks.at( idx );
+    // Already processed
+    if( !t->Dead )
+    {
+      GameResources::DrawTank( t->Colour, t->X, t->Y, (t->BlueTeam ? Angle(90) : Angle(270) ) );
+    }
+  }
 
 }
 
