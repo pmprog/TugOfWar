@@ -64,18 +64,22 @@ void GameStage::Update()
 
 		if( battletanks.size() > 0 )
 		{
-			battlecountdown--;
-
+      // Move tanks, and calculate battles
 			for( int idx = 0; idx < battletanks.size(); idx++ )
       {
         GameTankInfo* t = battletanks.at( idx );
-        // Already processed
-        if( !t->Dead )
-        {
-          t->X += ( t->BlueTeam ? 10 : -10 );
-        }
+        ProcessTank( t );
       }
 
+      // Remove dead tanks
+			for( int idx = battletanks.size() - 1; idx >= 0; idx-- )
+      {
+        GameTankInfo* t = battletanks.at( idx );
+        if( t->Dead )
+        {
+          battletanks.erase( battletanks.begin() + idx );
+        }
+      }
 
 		} else {
 			performbattle = false;
@@ -120,7 +124,6 @@ void GameStage::Update()
 		}
 
 		performbattle = true;
-		battlecountdown = 300;
 		for( int y = 0; y < 5; y++ )
     {
       for( int x = 0; x < 4; x++ )
@@ -130,7 +133,7 @@ void GameStage::Update()
           GameTankInfo* ti = new GameTankInfo();
           ti->Colour = blue->AttackMap[x][y];
           ti->BlueTeam = true;
-          ti->X = (x * -90) - 45;
+          ti->X = (x * 90) - 405;
           ti->Y = 45 + (y * 90);
           ti->Dead = false;
           battletanks.push_back( ti );
@@ -209,4 +212,47 @@ void GameStage::GenerateBackground()
 	al_hold_bitmap_drawing( false );
 
 	DISPLAY->ClearTarget();
+}
+
+void GameStage::ProcessTank(GameTankInfo* Tank)
+{
+  GameTankInfo* t = Tank;
+  // Already processed
+  if( !t->Dead )
+  {
+    t->X += ( t->BlueTeam ? 2 : -2 );
+
+    for( int idx = 0; idx < battletanks.size(); idx++ )
+    {
+      GameTankInfo* topp = battletanks.at( idx );
+      if( !topp->Dead && t->BlueTeam != topp->BlueTeam && t->Y == topp->Y && Maths::Abs( t->X - topp->X ) <= 45 )
+      {
+        // Check collision
+        if( topp->Colour == t->Colour )
+        {
+          topp->Dead = true;;
+          t->Dead = true;
+        }
+        if( topp->Colour == ((t->Colour + 1) % 3) )
+        {
+          topp->Dead = true;
+        }
+        if( t->Colour == ((topp->Colour + 1) % 3) )
+        {
+          t->Dead = true;
+        }
+      }
+    }
+
+    if( t->X < 0 && !t->BlueTeam )
+    {
+      currentgame->BlueLife--;
+      t->Dead = true;
+    }
+    if( t->X > 800 && t->BlueTeam )
+    {
+      currentgame->RedLife--;
+      t->Dead = true;
+    }
+  }
 }

@@ -22,12 +22,12 @@ class GameStage : public Stage
 		GameInfo* currentgame;
 		ALLEGRO_BITMAP* background;
 		bool performbattle;
-		int battlecountdown;
 		TTFFont* textfont;
 
 		std::vector<GameTankInfo*> battletanks;
 
 		void GenerateBackground();
+		void ProcessTank(GameTankInfo* Tank);
 
   public:
 		GameStage(GameInfo* Game);
