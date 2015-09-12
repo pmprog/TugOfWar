@@ -133,7 +133,7 @@ void GameStage::Update()
           GameTankInfo* ti = new GameTankInfo();
           ti->Colour = blue->AttackMap[x][y];
           ti->BlueTeam = true;
-          ti->X = (x * 90) - 405;
+          ti->X = (x * 90) - 315;
           ti->Y = 45 + (y * 90);
           ti->Dead = false;
           battletanks.push_back( ti );

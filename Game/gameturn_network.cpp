@@ -1,28 +1,30 @@
 
-#include "gamelobby_addai.h"
+#include "gameturn_network.h"
 
-GameLobbyAddAIStage::GameLobbyAddAIStage( GameLobbyStage* Owner )
+GameTurnNetworkStage::GameTurnNetworkStage( GameStage* Owner, PlayerInfo* Player )
 {
-	lobby = Owner;
+	currentgame = Owner;
+	currentplayer = Player;
+	optionfont = FontCache::LoadFont( "resources/armalite.ttf", 32 );
 }
 
-void GameLobbyAddAIStage::Begin()
-{
-}
-
-void GameLobbyAddAIStage::Pause()
+void GameTurnNetworkStage::Begin()
 {
 }
 
-void GameLobbyAddAIStage::Resume()
+void GameTurnNetworkStage::Pause()
 {
 }
 
-void GameLobbyAddAIStage::Finish()
+void GameTurnNetworkStage::Resume()
 {
 }
 
-void GameLobbyAddAIStage::EventOccurred(Event *e)
+void GameTurnNetworkStage::Finish()
+{
+}
+
+void GameTurnNetworkStage::EventOccurred(Event *e)
 {
 	if( e->Type == EVENT_KEY_DOWN )
 	{
@@ -32,19 +34,29 @@ void GameLobbyAddAIStage::EventOccurred(Event *e)
 			return;
 		}
 	}
+
+	// Let the game handle inputs
+	if( e->Type == EVENT_NETWORK_PACKET_RECEIVED )
+  {
+    FRAMEWORK->ProgramStages->Previous()->EventOccurred( e );
+  }
 }
 
-void GameLobbyAddAIStage::Update()
+void GameTurnNetworkStage::Update()
 {
 }
 
-void GameLobbyAddAIStage::Render()
+void GameTurnNetworkStage::Render()
 {
-	lobby->Render();
+	currentgame->Render();
 	al_draw_filled_rectangle( 0, 0, DISPLAY->GetWidth(), DISPLAY->GetHeight(), al_map_rgba( 0, 0, 0, 128 ) );
+
+	al_draw_filled_rectangle( 0, 150, DISPLAY->GetWidth(), 330, ( currentplayer->BlueTeam ? al_map_rgb( 30, 167, 225 ) : al_map_rgb( 232, 106, 23 ) ) );
+	optionfont->DrawString( 404, 284 - (optionfont->GetFontHeight() / 2), "Waiting for " + currentplayer->Name + "...", FontHAlign::CENTRE, al_map_rgb( 0, 0, 0 ) );
+	optionfont->DrawString( 400, 280 - (optionfont->GetFontHeight() / 2), "Waiting for " + currentplayer->Name + "...", FontHAlign::CENTRE, al_map_rgb( 255, 255, 255 ) );
 }
 
-bool GameLobbyAddAIStage::IsTransition()
+bool GameTurnNetworkStage::IsTransition()
 {
 	return false;
 }

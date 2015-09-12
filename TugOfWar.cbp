@@ -164,6 +164,7 @@
 		<Unit filename="Game/gamestage.h" />
 		<Unit filename="Game/gameturn_ai.cpp" />
 		<Unit filename="Game/gameturn_ai.h" />
+		<Unit filename="Game/gameturn_network.cpp" />
 		<Unit filename="Game/gameturn_network.h" />
 		<Unit filename="Game/gameturn_player.cpp" />
 		<Unit filename="Game/gameturn_player.h" />
