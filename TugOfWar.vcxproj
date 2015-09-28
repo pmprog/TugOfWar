@@ -57,6 +57,7 @@
     <ClCompile Include="Game\gamelobby_addlocal.cpp" />
     <ClCompile Include="Game\gamestage.cpp" />
     <ClCompile Include="Game\gameturn_ai.cpp" />
+    <ClCompile Include="Game\gameturn_network.cpp" />
     <ClCompile Include="Game\gameturn_player.cpp" />
     <ClCompile Include="Game\helpstage.cpp" />
     <ClCompile Include="Game\gamelobbystage.cpp" />

@@ -29,6 +29,9 @@ class GameStage : public Stage
 		void GenerateBackground();
 		void ProcessTank(GameTankInfo* Tank);
 
+		void ProcessAndValidatePacket(Event *e);
+		void ApplyPacket(Event *e);
+
   public:
 		GameStage(GameInfo* Game);
 

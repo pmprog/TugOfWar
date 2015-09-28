@@ -2,6 +2,7 @@
 #include "gamestage.h"
 #include "gameturn_player.h"
 #include "gameturn_ai.h"
+#include "gameturn_network.h"
 #include "../Framework/Primitives/strings.h"
 
 GameStage::GameStage(GameInfo* Game)
@@ -50,8 +51,10 @@ void GameStage::EventOccurred(Event *e)
 		if( currentgame->AmHost )
 		{
 			// Process and distribute
+			ProcessAndValidatePacket(e);
 		} else {
 			// Drive from here
+			ApplyPacket(e);
 		}
 	}
 }
@@ -115,12 +118,14 @@ void GameStage::Update()
 
 		if( blue->TurnData.back()->TurnData.size() == 0 )
 		{
-			// TODO: Push Network Wait
+			FRAMEWORK->ProgramStages->Push( new GameTurnNetworkStage( this, blue ) );
+			return;
 		}
 
 		if( red->TurnData.back()->TurnData.size() == 0 )
 		{
-			// TODO: Push Network Wait
+			FRAMEWORK->ProgramStages->Push( new GameTurnNetworkStage( this, red ) );
+			return;
 		}
 
 		performbattle = true;
@@ -255,4 +260,12 @@ void GameStage::ProcessTank(GameTankInfo* Tank)
       t->Dead = true;
     }
   }
+}
+
+void GameStage::ProcessAndValidatePacket(Event *e)
+{
+}
+
+void GameStage::ApplyPacket(Event *e)
+{
 }
