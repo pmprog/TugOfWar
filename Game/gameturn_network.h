@@ -10,6 +10,7 @@ class GameTurnNetworkStage : public Stage
 		TTFFont* optionfont;
 		GameStage* currentgame;
 		PlayerInfo* currentplayer;
+		int currentturn;
 
   public:
 		GameTurnNetworkStage( GameStage* Owner, PlayerInfo* Player );

@@ -44,6 +44,11 @@ void GameTurnNetworkStage::EventOccurred(Event *e)
 
 void GameTurnNetworkStage::Update()
 {
+  if( currentplayer->TurnData.back()->TurnData.size() == 0 )
+  {
+    delete FRAMEWORK->ProgramStages->Pop();
+    return;
+  }
 }
 
 void GameTurnNetworkStage::Render()
