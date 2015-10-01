@@ -16,7 +16,7 @@ Framework::Framework( int Width, int Height, int Framerate, bool DropFrames )
 	System = this;
 
 #ifdef WRITE_LOG
-	LogFile = fopen( "jane.log", "a" );
+	LogFile = fopen( "tugofwar.log", "a" );
 
 	fprintf( LogFile, "Framework: Startup: Allegro\n" );
 #endif

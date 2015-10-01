@@ -186,8 +186,9 @@ void GameLobbyStage::InputEvent(InputItems::ItemSet inputevent)
 			if( networkconnection == nullptr || networkconnection->IsServer() )
 			{
 				// TODO: Tell clients to start the game
+				GameStage* g = new GameStage( currentinfo );
 				delete FRAMEWORK->ProgramStages->Pop();
-				FRAMEWORK->ProgramStages->Push( new GameStage( currentinfo ) );
+				FRAMEWORK->ProgramStages->Push( g );
 			}
 			break;
 
