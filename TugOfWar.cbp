@@ -49,12 +49,10 @@
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-DLINUX" />
-			<Add option="-DDOWNLOAD_SUPPORT" />
 			<Add option="-DNETWORK_SUPPORT" />
 		</Compiler>
 		<Linker>
 			<Add library="enet" />
-			<Add library="curl" />
 			<Add library="allegro" />
 			<Add library="allegro_audio" />
 			<Add library="allegro_acodec" />
